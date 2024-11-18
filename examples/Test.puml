@@ -1,0 +1,16 @@
+@startuml
+!include ./EventStorming.iuml
+
+SubDomain("My Sub-Domain", SD1) {
+    IntegrationEvent('foo bar', 'FooBar', $Aggregate('Registered user'))
+    DomainEvent('Bla bla', BlaBla)
+    '$Aggregate('Registered user')
+}
+
+!$user = 'Bla'
+DomainEvent("Foo 2", Foo2, $User(Qus), $Command(Bas2), $Aggregate($user))
+DomainEvent("Foo 21", Foo21, $User(Qus1), $Command(Bas21), $Aggregate($user))
+
+Foo2_Aggregate --> Foo21_Aggregate
+
+@enduml
