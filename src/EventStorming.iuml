@@ -1,0 +1,271 @@
+!function $EventStormingObject($shape, $stereotype, $label, $id = '')
+    !if ($id != '')
+        !return $shape + ' "' + $label + '"' + ' as ' + $id + ' <<' + $stereotype + '>>'
+    !endif
+
+    !return $shape + ' "' + $label + '" <<' + $stereotype + '>>'
+!endfunction
+
+!function $HasId($declaration)
+    !return %strpos($declaration, ' as ') > 0
+!endfunction
+
+!function $GetIdBeginPosition($declaration)
+    ' Do not remove whitespaces around 'as' keyword to avoid matching 'as' in the middle of the word
+    !$position = %strpos($declaration, ' as ')
+
+    !assert $position > 0 : "Could not find 'as' keyword in the declaration: " + $declaration
+
+    !return $position + 4
+!endfunction
+
+!function $GetIdEndPosition($declaration)
+    !$position = %strpos($declaration, '<<')
+
+    !assert $position > 0 : "Could not find opening '<<' in the declaration: " + $declaration
+
+    !return $position - 1
+!endfunction
+
+!function $GetId($declaration)
+    !$idBeginPosition = $GetIdBeginPosition($declaration)
+    !$idEndPosition = $GetIdEndPosition($declaration)
+
+    !return %substr($declaration, $idBeginPosition, $idEndPosition - $idBeginPosition)
+!endfunction
+
+!function $GetStereotypeBeginPosition($declaration)
+    !$position = %strpos($declaration, '<<')
+
+    !assert $position > 0 : "Could not find opening '<<' in the declaration: " + $declaration
+
+    !return $position + 2
+!endfunction
+
+!function $GetStereotypeEndPosition($declaration)
+    !$position = %strpos($declaration, '>>')
+
+    !assert $position > 0 : "Could not find closing '>>' in the declaration: " + $declaration
+
+    !return $position
+!endfunction
+
+!function $GetStereotype($declaration)
+    !$stereotypeBeginPosition = $GetStereotypeBeginPosition($declaration)
+    !$stereotypeEndPosition = $GetStereotypeEndPosition($declaration)
+
+    !return %substr($declaration, $stereotypeBeginPosition, $stereotypeEndPosition - $stereotypeBeginPosition)
+!endfunction
+
+!function $WithId($declaration, $id)
+    !if ($HasId($declaration) == %true())
+        !return $declaration
+    !endif
+
+    !$idBeginPosition = $GetStereotypeBeginPosition($declaration) - 2
+    !$firstPart = %substr($declaration, 0, $idBeginPosition)
+    !$secondPart = %substr($declaration, $idBeginPosition, %strlen($declaration) - $idBeginPosition)
+
+    !return $firstPart + ' as ' + $id + ' ' + $secondPart
+!endfunction
+
+!function $DomainEvent($label, $id)
+    !return $EventStormingObject('file', 'DomainEvent', $label, $id)
+!endfunction
+
+!unquoted procedure IntegrationEvent($label, $id)
+    $DomainEvent($label, $id)
+!endfunction
+
+!unquoted procedure DomainEvent($label, $id, $object1 = '', $object2 = '', $object3 = '', $object4 = '')
+    $EventBlock($DomainEvent($label, $id), $object1, $object2, $object3, $object4)
+!endfunction
+
+!function $IntegrationEvent($label, $id)
+    !return $EventStormingObject('file', 'IntegrationEvent', $label, $id)
+!endfunction
+
+!unquoted procedure IntegrationEvent($label, $id)
+    $IntegrationEvent($label, $id)
+!endfunction
+
+!unquoted procedure IntegrationEvent($label, $id, $object1, $object2 = '', $object3 = '', $object4 = '')
+    $EventBlock($IntegrationEvent($label, $id), $object1, $object2, $object3, $object4)
+!endfunction
+
+!function $Aggregate($label, $id='')
+    !return $EventStormingObject('file', 'Aggregate', $label, $id)
+!endfunction
+
+!function $Command($label, $id='')
+    !return $EventStormingObject('file', 'Command', $label, $id)
+!endfunction
+
+!function $User($label, $id='')
+    !return $EventStormingObject('actor', 'User', $label, $id)
+!endfunction
+
+!function $ReadModel($label, $id='')
+    !return $EventStormingObject('file', 'ReadModel', $label, $id)
+!endfunction
+
+!unquoted procedure SubDomain($label, $id = '')
+    !if $id == ''
+        rectangle "$label"
+    !else
+        rectangle "$label" as $id
+    !endif
+!endprocedure
+
+!unquoted procedure $EventBlock($event, $object1='', $object2='', $object3='', $object4='')
+    !assert $GetStereotype($event) == 'DomainEvent' || $GetStereotype($event) == 'IntegrationEvent'
+
+    'All variable names with double underscores to omit name conflicts
+    !$__eventId__ = $GetId($event)
+    !$__command__ = ''
+    !$__aggregate__ = ''
+    !$__user__ = ''
+    !$__readModel__ = ''
+
+    ' There are no arrays in PlantUML, so we have to check each object separately
+    !if ($object1 != '')
+        !$object1Stereotype = $GetStereotype($object1)
+        !if ($object1Stereotype == 'Aggregate')
+            !$__aggregate__ = $object1
+        !elseif ($object1Stereotype == 'Command')
+            !$__command__ = $object1
+        !elseif ($object1Stereotype == 'User')
+            !$__user__ = $object1
+        !elseif ($object1Stereotype == 'ReadModel')
+            !$__readModel__ = $object1
+        !else
+            !assert %false() : "Unknown stereotype: " + $object1Stereotype
+        !endif
+    !endif
+
+    !if ($object2 != '')
+        !$object2Stereotype = $GetStereotype($object2)
+        !if ($object2Stereotype == 'Aggregate')
+            !$__aggregate__ = $object2
+        !elseif ($object2Stereotype == 'Command')
+            !$__command__ = $object2
+        !elseif ($object2Stereotype == 'User')
+            !$__user__ = $object2
+        !elseif ($object2Stereotype == 'ReadModel')
+            !$__readModel__ = $object2
+        !else
+            !assert %false() : "Unknown stereotype: " + $object2Stereotype
+        !endif
+    !endif
+
+    !if ($object3 != '')
+        !$object3Stereotype = $GetStereotype($object3)
+        !if ($object3Stereotype == 'Aggregate')
+            !$__aggregate__ = $object3
+        !elseif ($object3Stereotype == 'Command')
+            !$__command__ = $object3
+        !elseif ($object3Stereotype == 'User')
+            !$__user__ = $object3
+        !elseif ($object3Stereotype == 'ReadModel')
+            !$__readModel__ = $object3
+        !else
+            !assert %false() : "Unknown stereotype: " + $object3Stereotype
+        !endif
+    !endif
+
+    !if ($object4 != '')
+        !$object4Stereotype = $GetStereotype($object4)
+        !if ($object4Stereotype == 'Aggregate')
+            !$__aggregate__ = $object4
+        !elseif ($object4Stereotype == 'Command')
+            !$__command__ = $object4
+        !elseif ($object4Stereotype == 'User')
+            !$__user__ = $object4
+        !elseif ($object4Stereotype == 'ReadModel')
+            !$__readModel__ = $object4
+        !else
+            !assert %false() : "Unknown stereotype: " + $object4Stereotype
+        !endif
+    !endif
+
+    rectangle {
+        $event
+
+        !if ($__aggregate__ != '')
+            !$__aggregate__ = $WithId($__aggregate__, $__eventId__ + '_Aggregate')
+
+            $__aggregate__
+
+            'ID can be another than Aggregate when it was set explicitly
+            !$__aggregate__Id = $GetId($__aggregate__)
+            $__aggregate__Id -- $__eventId__
+        !endif
+
+        !if ($__readModel__ != '')
+            !$__readModel__ = $WithId($__readModel__, $__eventId__ + '_ReadModel')
+            $__readModel__
+
+            !$__readModelId__ = $GetId($__readModel__)
+            $__eventId__ -- $__readModelId__
+        !endif
+
+        !if ($__command__ != '')
+            !$__command__ = $WithId($__command__, $__eventId__ + '_Command')
+            $__command__
+
+            !$__commandId__ = $GetId($__command__)
+            $__commandId__ - $__eventId__
+
+            !if ($__user__ != '')
+                !$__user__ = $WithId($__user__, $__eventId__ + '_User')
+                $__user__
+
+                !$__userId__ = $GetId($__user__)
+                $__userId__ - $__commandId__
+            !endif
+        !endif
+    }
+!endprocedure
+
+show stereotype
+skinparam defaultTextAlignment center
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
+skinparam nodesep 35
+skinparam ranksep 1
+skinparam linetype ortho
+
+skinparam file<<DomainEvent>> {
+    BackgroundColor Orange
+    Opacity 1
+}
+
+skinparam file<<IntegrationEvent>> {
+    BackgroundColor DarkOrange
+    Opacity 1
+}
+
+skinparam file<<Aggregate>> {
+    BackgroundColor Yellow
+    Opacity 1
+}
+
+skinparam file<<Command>> {
+    BackgroundColor LightBlue
+    Opacity 1
+}
+
+skinparam actor<<User>> {
+    BackgroundColor Green
+    Opacity 1
+}
+
+skinparam file<<ReadModel>> {
+    BackgroundColor LightGreen
+    Opacity 1
+}
+
+skinparam file<<BusinessProcess>> {
+    BackgroundColor LightGray
+    Opacity 1
+}
