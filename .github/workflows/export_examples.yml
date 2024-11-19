@@ -1,0 +1,21 @@
+name: Export PlantUML diagrams of the examples directory
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  export-diagrams:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4.2.2
+      - name: Render and export diagrams
+        uses: dreamsinbits/export-plantuml-action@v1.0.0
+        with:
+          args: -v -svg /examples
+          
+        
+        
