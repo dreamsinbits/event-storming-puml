@@ -1,5 +1,0 @@
-@startuml
-!include EventStorming.iuml
-!includesub EventStormingShoppingElephant.puml!DECL
-!includesub EventStormingShoppingElephant.puml!ShoppingPlanning
-@enduml

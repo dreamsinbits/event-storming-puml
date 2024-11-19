@@ -1,7 +1,7 @@
 @startuml
 !startsub DECL
 
-!include ../PlantUml/EventStorming.iuml
+!include ../src/EventStorming.iuml
 
 !$user = 'User'
 !$recurringItemsList = 'Recurring items list'

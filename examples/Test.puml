@@ -1,5 +1,5 @@
 @startuml
-!include ./EventStorming.iuml
+!include ../src/EventStorming.iuml
 
 SubDomain("My Sub-Domain", SD1) {
     IntegrationEvent('foo bar', 'FooBar', $Aggregate('Registered user'))
