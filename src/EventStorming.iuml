@@ -109,6 +109,14 @@
     !return $EventStormingObject('file', 'ReadModel', $label, $id)
 !endfunction
 
+!function $Policy($label, $id='')
+    !return $EventStormingObject('file', 'Policy', $label, $id)
+!endfunction
+
+!function $System($label, $id='')
+    !return $EventStormingObject('file', 'System', $label, $id)
+!endfunction
+
 !unquoted procedure SubDomain($label, $id = '')
     !if $id == ''
         rectangle "$label"
@@ -117,7 +125,7 @@
     !endif
 !endprocedure
 
-!unquoted procedure $EventBlock($event, $object1='', $object2='', $object3='', $object4='')
+!unquoted procedure $EventBlock($event, $object1='', $object2='', $object3='', $object4='', $object5='')
     !assert $GetStereotype($event) == 'DomainEvent' || $GetStereotype($event) == 'IntegrationEvent'
 
     'All variable names with double underscores to omit name conflicts
@@ -125,6 +133,7 @@
     !$__command__ = ''
     !$__aggregate__ = ''
     !$__user__ = ''
+    !$__policy__ = ''
     !$__readModel__ = ''
 
     ' There are no arrays in PlantUML, so we have to check each object separately
@@ -136,6 +145,8 @@
             !$__command__ = $object1
         !elseif ($object1Stereotype == 'User')
             !$__user__ = $object1
+        !elseif ($object1Stereotype == 'Policy')
+            !$__policy__ = $object1
         !elseif ($object1Stereotype == 'ReadModel')
             !$__readModel__ = $object1
         !else
@@ -151,6 +162,8 @@
             !$__command__ = $object2
         !elseif ($object2Stereotype == 'User')
             !$__user__ = $object2
+        !elseif ($object2Stereotype == 'Policy')
+            !$__policy__ = $object2
         !elseif ($object2Stereotype == 'ReadModel')
             !$__readModel__ = $object2
         !else
@@ -166,6 +179,8 @@
             !$__command__ = $object3
         !elseif ($object3Stereotype == 'User')
             !$__user__ = $object3
+        !elseif ($object3Stereotype == 'Policy')
+            !$__policy__ = $object3
         !elseif ($object3Stereotype == 'ReadModel')
             !$__readModel__ = $object3
         !else
@@ -181,10 +196,29 @@
             !$__command__ = $object4
         !elseif ($object4Stereotype == 'User')
             !$__user__ = $object4
+        !elseif ($object4Stereotype == 'Policy')
+            !$__policy__ = $object4
         !elseif ($object4Stereotype == 'ReadModel')
             !$__readModel__ = $object4
         !else
             !assert %false() : "Unknown stereotype: " + $object4Stereotype
+        !endif
+    !endif
+
+    !if ($object5 != '')
+        !$object5Stereotype = $GetStereotype($object5)
+        !if ($object5Stereotype == 'Aggregate')
+            !$__aggregate__ = $object5
+        !elseif ($object5Stereotype == 'Command')
+            !$__command__ = $object5
+        !elseif ($object5Stereotype == 'User')
+            !$__user__ = $object5
+        !elseif ($object5Stereotype == 'Policy')
+            !$__policy__ = $object5
+        !elseif ($object5Stereotype == 'ReadModel')
+            !$__readModel__ = $object5
+        !else
+            !assert %false() : "Unknown stereotype: " + $object5Stereotype
         !endif
     !endif
 
@@ -216,6 +250,14 @@
             !$__commandId__ = $GetId($__command__)
             $__commandId__ - $__eventId__
 
+            !if ($__policy__ != '')
+                !$__policy__ = $WithId($__policy__, $__eventId__ + '_Policy')
+                $__policy__
+
+                !$__policyId__ = $GetId($__policy__)
+                $__policyId__ - $__commandId__
+            !endif
+
             !if ($__user__ != '')
                 !$__user__ = $WithId($__user__, $__eventId__ + '_User')
                 $__user__
@@ -223,6 +265,7 @@
                 !$__userId__ = $GetId($__user__)
                 $__userId__ - $__commandId__
             !endif
+
         !endif
     }
 !endprocedure
@@ -265,7 +308,12 @@ skinparam file<<ReadModel>> {
     Opacity 1
 }
 
-skinparam file<<BusinessProcess>> {
+skinparam file<<System>> {
     BackgroundColor LightGray
+    Opacity 1
+}
+
+skinparam file<<Policy>> {
+    BackgroundColor Violet
     Opacity 1
 }
