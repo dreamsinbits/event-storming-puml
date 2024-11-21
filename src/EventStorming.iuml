@@ -310,7 +310,8 @@
                 !$__userId__ = $GetId($__user__)
                 $__userId__ - $__commandId__
             !endif
-
+        !else
+            !assert $__command__ == '' && $__user__ == '' : "Command and User objects must be set together."
         !endif
     }
 !endprocedure
