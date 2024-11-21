@@ -9,18 +9,22 @@ SubDomain("My Sub-Domain", SD1) {
 
 !$user = 'Bla'
 DomainEvent("Foo 2", Foo2, $User(Qus), $Command(Bas2), $Aggregate($user))
-DomainEvent("Foo 21", Foo21, $User(Qus1), $Command(Bas21), $Aggregate($user))
-DomainEvent("Event with Policy", EventWithPolicy, $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
-DomainEvent("Event with Policy and User", EventWithPolicyAndUser, $User(Hans), $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
-DomainEvent("Event with Read Model", EventWithReadModel, $User(Hans), $ReadModel(Data), $Command(MyCommand), $Aggregate(MyAggregate))
-
-Foo2 -> Foo21_User
-
 note as foo
     This is a note
 end note
-
 Foo2_Aggregate . foo
+
+DomainEvent("Foo 21", Foo21, $User(Qus1), $Command(Bas21), $Aggregate($user))
+DomainEvent("Event with Policy", EventWithPolicy, $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
+DomainEvent("Event with Policy and User", EventWithPolicyAndUser, $ReadModel(Foo), $User(Hans), $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
+DomainEvent("Event with Read Model", EventWithReadModel, $User(Hans), $ReadModel(Data), $Command(MyCommand), $Aggregate(MyAggregate))
+
+DomainEvent("Event with System", EventWithSystem, $User(Hans), $System(Data), $Command(MyCommand), $Aggregate(MyAggregate))
+DomainEvent("Event with System", EventWithSystemWithoutCommand, $System(Data), $Aggregate(MyAggregate))
+
+Foo2 -> Foo21_User
+
+
 
 
 

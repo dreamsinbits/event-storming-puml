@@ -77,8 +77,8 @@
     $DomainEvent($label, $id)
 !endfunction
 
-!unquoted procedure DomainEvent($label, $id, $object1 = '', $object2 = '', $object3 = '', $object4 = '')
-    $EventBlock($DomainEvent($label, $id), $object1, $object2, $object3, $object4)
+!unquoted procedure DomainEvent($label, $id, $object1 = '', $object2 = '', $object3 = '', $object4 = '', $object5 = '', $object6 = '')
+    $EventBlock($DomainEvent($label, $id), $object1, $object2, $object3, $object4, $object5, $object6)
 !endfunction
 
 !function $IntegrationEvent($label, $id)
@@ -89,8 +89,8 @@
     $IntegrationEvent($label, $id)
 !endfunction
 
-!unquoted procedure IntegrationEvent($label, $id, $object1, $object2 = '', $object3 = '', $object4 = '')
-    $EventBlock($IntegrationEvent($label, $id), $object1, $object2, $object3, $object4)
+!unquoted procedure IntegrationEvent($label, $id, $object1, $object2 = '', $object3 = '', $object4 = '', $object5 = '', $object6 = '')
+    $EventBlock($IntegrationEvent($label, $id), $object1, $object2, $object3, $object4, $object5, $object6)
 !endfunction
 
 !function $Aggregate($label, $id='')
@@ -125,15 +125,16 @@
     !endif
 !endprocedure
 
-!unquoted procedure $EventBlock($event, $object1='', $object2='', $object3='', $object4='', $object5='')
+!unquoted procedure $EventBlock($event, $object1='', $object2='', $object3='', $object4='', $object5='', $object6='')
     !assert $GetStereotype($event) == 'DomainEvent' || $GetStereotype($event) == 'IntegrationEvent'
 
     'All variable names with double underscores to omit name conflicts
     !$__eventId__ = $GetId($event)
-    !$__command__ = ''
-    !$__aggregate__ = ''
     !$__user__ = ''
     !$__policy__ = ''
+    !$__command__ = ''
+    !$__system__ = ''
+    !$__aggregate__ = ''
     !$__readModel__ = ''
 
     ' There are no arrays in PlantUML, so we have to check each object separately
@@ -149,6 +150,8 @@
             !$__policy__ = $object1
         !elseif ($object1Stereotype == 'ReadModel')
             !$__readModel__ = $object1
+        !elseif ($object1Stereotype == 'System')
+            !$__system__ = $object1
         !else
             !assert %false() : "Unknown stereotype: " + $object1Stereotype
         !endif
@@ -166,6 +169,8 @@
             !$__policy__ = $object2
         !elseif ($object2Stereotype == 'ReadModel')
             !$__readModel__ = $object2
+        !elseif ($object2Stereotype == 'System')
+            !$__system__ = $object2
         !else
             !assert %false() : "Unknown stereotype: " + $object2Stereotype
         !endif
@@ -183,6 +188,8 @@
             !$__policy__ = $object3
         !elseif ($object3Stereotype == 'ReadModel')
             !$__readModel__ = $object3
+        !elseif ($object3Stereotype == 'System')
+            !$__system__ = $object3
         !else
             !assert %false() : "Unknown stereotype: " + $object3Stereotype
         !endif
@@ -200,6 +207,8 @@
             !$__policy__ = $object4
         !elseif ($object4Stereotype == 'ReadModel')
             !$__readModel__ = $object4
+        !elseif ($object4Stereotype == 'System')
+            !$__system__ = $object4
         !else
             !assert %false() : "Unknown stereotype: " + $object4Stereotype
         !endif
@@ -217,8 +226,29 @@
             !$__policy__ = $object5
         !elseif ($object5Stereotype == 'ReadModel')
             !$__readModel__ = $object5
+        !elseif ($object5Stereotype == 'System')
+            !$__system__ = $object5
         !else
             !assert %false() : "Unknown stereotype: " + $object5Stereotype
+        !endif
+    !endif
+
+    !if ($object6 != '')
+        !$object6Stereotype = $GetStereotype($object5)
+        !if ($object6Stereotype == 'Aggregate')
+            !$__aggregate__ = $object6
+        !elseif ($object6Stereotype == 'Command')
+            !$__command__ = $object6
+        !elseif ($object6Stereotype == 'User')
+            !$__user__ = $object6
+        !elseif ($object6Stereotype == 'Policy')
+            !$__policy__ = $object6
+        !elseif ($object6Stereotype == 'ReadModel')
+            !$__readModel__ = $object6
+        !elseif ($object6Stereotype == 'System')
+            !$__system__ = $object6
+        !else
+            !assert %false() : "Unknown stereotype: " + $object6Stereotype
         !endif
     !endif
 
@@ -243,12 +273,27 @@
             $__eventId__ -- $__readModelId__
         !endif
 
+        !$__systemId__ = ''
+
+        !if ($__system__ != '')
+            !$__system__ = $WithId($__system__, $__eventId__ + '_System')
+            $__system__
+
+            !$__systemId__ = $GetId($__system__)
+            $__systemId__ - $__eventId__
+        !endif
+
         !if ($__command__ != '')
             !$__command__ = $WithId($__command__, $__eventId__ + '_Command')
             $__command__
 
             !$__commandId__ = $GetId($__command__)
-            $__commandId__ - $__eventId__
+
+            !if ($__systemId__ != '')
+                $__commandId__ - $__systemId__
+            !else
+                $__commandId__ - $__eventId__
+            !endif
 
             !if ($__policy__ != '')
                 !$__policy__ = $WithId($__policy__, $__eventId__ + '_Policy')
