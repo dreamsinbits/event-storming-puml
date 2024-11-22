@@ -119,9 +119,9 @@
 
 !unquoted procedure SubDomain($label, $id = '')
     !if $id == ''
-        rectangle "$label"
+        rectangle "$label" #LightBlue
     !else
-        rectangle "$label" as $id
+        rectangle "$label" as $id #LightBlue
     !endif
 !endprocedure
 
