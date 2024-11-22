@@ -340,7 +340,7 @@ skinparam file<<Aggregate>> {
 }
 
 skinparam file<<Command>> {
-    BackgroundColor LightBlue
+    BackgroundColor CornflowerBlue
     Opacity 1
 }
 
