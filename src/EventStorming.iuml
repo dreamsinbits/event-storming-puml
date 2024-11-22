@@ -125,6 +125,14 @@
     !endif
 !endprocedure
 
+!unquoted procedure Process($label, $id = '')
+    !if $id == ''
+        rectangle "$label"
+    !else
+        rectangle "$label" as $id
+    !endif
+!endprocedure
+
 !unquoted procedure $EventBlock($event, $object1='', $object2='', $object3='', $object4='', $object5='', $object6='')
     !assert $GetStereotype($event) == 'DomainEvent' || $GetStereotype($event) == 'IntegrationEvent'
 
