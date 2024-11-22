@@ -265,14 +265,6 @@
             $__aggregate__Id -- $__eventId__
         !endif
 
-        !if ($__readModel__ != '')
-            !$__readModel__ = $WithId($__readModel__, $__eventId__ + '_ReadModel')
-            $__readModel__
-
-            !$__readModelId__ = $GetId($__readModel__)
-            $__eventId__ -- $__readModelId__
-        !endif
-
         !$__systemId__ = ''
 
         !if ($__system__ != '')
@@ -282,6 +274,8 @@
             !$__systemId__ = $GetId($__system__)
             $__systemId__ - $__eventId__
         !endif
+
+        !$__commandId__ = ''
 
         !if ($__command__ != '')
             !$__command__ = $WithId($__command__, $__eventId__ + '_Command')
@@ -313,7 +307,19 @@
         !else
             !assert $__command__ == '' && $__user__ == '' : "Command and User objects must be set together."
         !endif
-    }
+
+        !if ($__readModel__ != '')
+            !$__readModel__ = $WithId($__readModel__, $__eventId__ + '_ReadModel')
+            $__readModel__
+
+            !$__readModelId__ = $GetId($__readModel__)
+            $__eventId__ -[hidden]- $__readModelId__
+
+            !if ($__commandId__ != '')
+                $__commandId__ -[hidden]- $__readModelId__
+            !endif
+        !endif
+        }
 !endprocedure
 
 show stereotype
