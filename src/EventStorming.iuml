@@ -320,7 +320,8 @@ show stereotype
 skinparam defaultTextAlignment center
 skinparam wrapWidth 200
 skinparam maxMessageSize 150
-skinparam nodesep 35
+skinparam nodesep 10
+' Unfortunately it's not possible to set a smaller ranksep than 1
 skinparam ranksep 1
 skinparam linetype ortho
 
