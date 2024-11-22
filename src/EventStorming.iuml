@@ -252,7 +252,6 @@
         !endif
     !endif
 
-    rectangle {
         $event
 
         !if ($__aggregate__ != '')
@@ -319,7 +318,6 @@
                 $__commandId__ -[hidden]- $__readModelId__
             !endif
         !endif
-        }
 !endprocedure
 
 show stereotype
