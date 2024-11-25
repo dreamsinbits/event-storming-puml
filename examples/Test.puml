@@ -26,6 +26,7 @@ SubDomain("Anther Sub-Domain", SD2) {
         DomainEvent("Event with Read Model and without Command", EventWithReadModelWithoutCommand, $ReadModel(Data), $Aggregate(MyAggregate))
 
         Blocker("Annoying blocker", "Blocker")
+        Opportunity("Opportunity for improvement", "Opportunity")
 
         Blocker -- EventWithReadModel
     }

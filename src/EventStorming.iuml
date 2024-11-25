@@ -97,6 +97,10 @@
     $EventStormingObject('file', 'Blocker', $label, $id)
 !endfunction
 
+!unquoted procedure Opportunity($label, $id)
+    $EventStormingObject('file', 'Opportunity', $label, $id)
+!endfunction
+
 !function $Aggregate($label, $id='')
     !return $EventStormingObject('file', 'Aggregate', $label, $id)
 !endfunction
@@ -383,5 +387,10 @@ skinparam file<<Policy>> {
 
 skinparam file<<Blocker>> {
     BackgroundColor #e300b7
+    Opacity 1
+}
+
+skinparam file<<Opportunity>> {
+    BackgroundColor GreenYellow
     Opacity 1
 }
