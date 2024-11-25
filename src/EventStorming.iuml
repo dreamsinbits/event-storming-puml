@@ -338,41 +338,41 @@ skinparam ranksep 1
 skinparam linetype ortho
 
 skinparam file<<DomainEvent>> {
-    BackgroundColor Orange
+    BackgroundColor #ff8b00
     Opacity 1
 }
 
 skinparam file<<IntegrationEvent>> {
-    BackgroundColor DarkOrange
+    BackgroundColor Orange
     Opacity 1
 }
 
 skinparam file<<Aggregate>> {
-    BackgroundColor Yellow
+    BackgroundColor #ffee88
     Opacity 1
 }
 
 skinparam file<<Command>> {
-    BackgroundColor CornflowerBlue
+    BackgroundColor #25abfd
     Opacity 1
 }
 
 skinparam actor<<User>> {
-    BackgroundColor Green
+    BackgroundColor #fdf72d
     Opacity 1
 }
 
 skinparam file<<ReadModel>> {
-    BackgroundColor LightGreen
+    BackgroundColor #b3e300
     Opacity 1
 }
 
 skinparam file<<System>> {
-    BackgroundColor LightGray
+    BackgroundColor #fcd5ed
     Opacity 1
 }
 
 skinparam file<<Policy>> {
-    BackgroundColor Violet
+    BackgroundColor #e9beff
     Opacity 1
 }

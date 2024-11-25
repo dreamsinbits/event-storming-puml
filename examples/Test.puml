@@ -6,8 +6,6 @@ SubDomain("My Sub-Domain", SD1) {
     DomainEvent('Bla bla', BlaBla, $Command(MyCommand))
     '$Aggregate('Registered user')
 }
-rectangle InvisibleBox #Transparent {
-}
 
 SubDomain("Anther Sub-Domain", SD2) {
     Process("My Process", MyProcess) {
