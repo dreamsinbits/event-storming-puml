@@ -93,6 +93,10 @@
     $EventBlock($IntegrationEvent($label, $id), $object1, $object2, $object3, $object4, $object5, $object6)
 !endfunction
 
+!unquoted procedure Blocker($label, $id)
+    $EventStormingObject('file', 'Blocker', $label, $id)
+!endfunction
+
 !function $Aggregate($label, $id='')
     !return $EventStormingObject('file', 'Aggregate', $label, $id)
 !endfunction
@@ -374,5 +378,10 @@ skinparam file<<System>> {
 
 skinparam file<<Policy>> {
     BackgroundColor #e9beff
+    Opacity 1
+}
+
+skinparam file<<Blocker>> {
+    BackgroundColor #e300b7
     Opacity 1
 }

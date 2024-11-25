@@ -24,6 +24,10 @@ SubDomain("Anther Sub-Domain", SD2) {
     Process("Another Process", AnotherProcess) {
         DomainEvent("Event with Read Model", EventWithReadModel, $User(Hans), $ReadModel(Data), $Command(MyCommand), $Aggregate(MyAggregate))
         DomainEvent("Event with Read Model and without Command", EventWithReadModelWithoutCommand, $ReadModel(Data), $Aggregate(MyAggregate))
+
+        Blocker("Annoying blocker", "Blocker")
+
+        Blocker -- EventWithReadModel
     }
 
     Process("Yet Another Process", YetAnotherProcess) {
