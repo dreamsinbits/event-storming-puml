@@ -1,0 +1,11 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethingHappened)
+
+rectangle "Test rectangle" as TestRectangle
+
+TestRectangle ---> SomethingHappened
+
+@enduml
