@@ -4,7 +4,8 @@
 SubDomain("My Sub-Domain", SD1) {
     IntegrationEvent('foo bar', 'FooBar', $Aggregate('Registered user'))
     DomainEvent('Bla bla', BlaBla, $Command(MyCommand))
-    '$Aggregate('Registered user')
+
+    FooBar -[hidden] BlaBla_Input
 }
 
 SubDomain("Anther Sub-Domain", SD2) {
@@ -17,6 +18,8 @@ SubDomain("Anther Sub-Domain", SD2) {
         DomainEvent("Foo 21", Foo21, $User(Qus1), $Command(Bas21), $Aggregate($user))
         DomainEvent("Event with Policy", EventWithPolicy, $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
         DomainEvent("Event with Policy and User", EventWithPolicyAndUser, $ReadModel(Foo), $User(Hans), $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
+
+        Foo2 -[hidden] Foo21_Input
     }
 
     Process("Another Process", AnotherProcess) {
@@ -33,8 +36,6 @@ SubDomain("Anther Sub-Domain", SD2) {
         DomainEvent("Event with System", EventWithSystem, $User(Hans), $System(Data), $Command(MyCommand), $Aggregate(MyAggregate))
         DomainEvent("Event with System", EventWithSystemWithoutCommand, $System(Data), $Aggregate(MyAggregate))
     }
-
-    Foo2 -> Foo21_User
 }
 
 @enduml
