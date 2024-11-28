@@ -250,7 +250,7 @@
     !endif
 
     !if ($object6 != '')
-        !$object6Stereotype = $GetStereotype($object5)
+        !$object6Stereotype = $GetStereotype($object6)
         !if ($object6Stereotype == 'Aggregate')
             !$__aggregate__ = $object6
         !elseif ($object6Stereotype == 'Command')
