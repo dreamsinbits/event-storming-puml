@@ -320,7 +320,8 @@
                 $__userId__ - $__commandId__
             !endif
         !else
-            !assert $__command__ == '' && $__user__ == '' : "Command and User objects must be set together."
+            !assert $__command__ == '' && $__user__ == '' : "User objects can only be set with a Command."
+            !assert $__command__ == '' && $__policy__ == '' : "Policy objects can only be set with a Command."
         !endif
 
         !if ($__readModel__ != '')
