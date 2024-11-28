@@ -110,7 +110,7 @@
 !endfunction
 
 !function $User($label, $id='')
-    !return $EventStormingObject('actor', 'User', $label, $id)
+    !return $EventStormingObject('person', 'User', $label, $id)
 !endfunction
 
 !function $ReadModel($label, $id='')
@@ -127,9 +127,9 @@
 
 !unquoted procedure SubDomain($label, $id = '')
     !if $id == ''
-        rectangle "$label" #LightBlue
+        storage "$label" #LightBlue
     !else
-        rectangle "$label" as $id #LightBlue
+        storage "$label" as $id #LightBlue
     !endif
 !endprocedure
 
@@ -146,6 +146,7 @@
 
     'All variable names with double underscores to omit name conflicts
     !$__eventId__ = $GetId($event)
+    !$__firstObjectId__ = $__eventId__
     !$__user__ = ''
     !$__policy__ = ''
     !$__command__ = ''
@@ -268,6 +269,11 @@
         !endif
     !endif
 
+        !$__inputId__ = $__eventId__ + '_Input'
+        !$__input__ = 'queue " " as ' + $__inputId__ + ' #Black;line:Black'
+
+        $__input__
+
         $event
 
         !if ($__aggregate__ != '')
@@ -288,6 +294,8 @@
 
             !$__systemId__ = $GetId($__system__)
             $__systemId__ - $__eventId__
+
+            !$__firstObjectId__ = $__systemId__
         !endif
 
         !$__commandId__ = ''
@@ -297,6 +305,7 @@
             $__command__
 
             !$__commandId__ = $GetId($__command__)
+            !$__firstObjectId__ = $__commandId__
 
             !if ($__systemId__ != '')
                 $__commandId__ - $__systemId__
@@ -310,14 +319,25 @@
 
                 !$__policyId__ = $GetId($__policy__)
                 $__policyId__ - $__commandId__
+
+                !$__firstObjectId__ = $__policyId__
             !endif
 
             !if ($__user__ != '')
                 !$__user__ = $WithId($__user__, $__eventId__ + '_User')
+
                 $__user__
 
                 !$__userId__ = $GetId($__user__)
                 $__userId__ - $__commandId__
+                $__inputId__ -[hidden] $__userId__
+
+                !$__firstObjectId__ = $__userId__
+            !endif
+
+            !if ($__user__ != '' && $__policy__ != '')
+                $__userId__ -[hidden] $__policyId__
+                $__policyId__ -[hidden] $__userId__
             !endif
         !else
             !assert $__command__ == '' && $__user__ == '' : "User objects can only be set with a Command."
@@ -335,6 +355,8 @@
                 $__commandId__ -[hidden]- $__readModelId__
             !endif
         !endif
+
+        $__inputId__ - $__firstObjectId__
 !endprocedure
 
 show stereotype
@@ -366,7 +388,7 @@ skinparam file<<Command>> {
     Opacity 1
 }
 
-skinparam actor<<User>> {
+skinparam person<<User>> {
     BackgroundColor #fdf72d
     Opacity 1
 }
