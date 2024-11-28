@@ -1,0 +1,9 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+SubDomain('Some subdomain', SomeSubDomain) {
+    DomainEvent('Something happened', SomethingHappened)
+}
+
+@enduml

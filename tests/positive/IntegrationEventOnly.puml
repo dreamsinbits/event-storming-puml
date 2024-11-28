@@ -1,0 +1,7 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+IntegrationEvent('Something happened', SomethingHappened)
+
+@enduml

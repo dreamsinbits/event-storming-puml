@@ -1,0 +1,11 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethingHappened, $ReadModel('Data'))
+
+note "Test note" as TestNote
+
+TestNote ---> SomethingHappened_ReadModel
+
+@enduml

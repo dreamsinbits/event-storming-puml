@@ -1,0 +1,23 @@
+@startuml
+
+
+!include ../../src/EventStorming.iuml
+
+SubDomain('My subdomain', MySubdomain) {
+    Process('A process', AProcess) {
+        DomainEvent('Something happened', SomethingHappened, $Command('Do something'), $Aggregate('An aggregate'), $Policy('A policy'), $System('A system that does something'), $User('A user'), $ReadModel('Data'))
+        Blocker('A blocker', ABlocker)
+        Opportunity('An opportunity', AnOpportunity)
+        Opportunity('Another opportunity', AnotherOpportunity)
+
+        AnOpportunity -- SomethingHappened_System
+        AnotherOpportunity -- SomethingHappened_System
+        ABlocker -- SomethingHappened
+
+        DomainEvent('Something else happened', SomethingElseHappened, $Command('Do something else'), $Aggregate('Another aggregate'), $Policy('Another policy'), $System('Another system that does something else'), $User('Another user'), $ReadModel('Another Data'))
+
+        SomethingHappened - SomethingElseHappened_Input
+    }
+}
+
+@enduml
