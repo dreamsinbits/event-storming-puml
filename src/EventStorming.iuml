@@ -1,4 +1,4 @@
-!function $EventStormingObject($shape, $stereotype, $label, $id = '')
+!function $EventStormingSticky($shape, $stereotype, $label, $id = '')
     !if ($id != '')
         !return $shape + ' "' + $label + '"' + ' as ' + $id + ' <<' + $stereotype + '>>'
     !endif
@@ -70,59 +70,59 @@
 !endfunction
 
 !function $DomainEvent($label, $id)
-    !return $EventStormingObject('file', 'DomainEvent', $label, $id)
+    !return $EventStormingSticky('file', 'DomainEvent', $label, $id)
 !endfunction
 
 !unquoted procedure IntegrationEvent($label, $id)
     $DomainEvent($label, $id)
 !endfunction
 
-!unquoted procedure DomainEvent($label, $id, $object1 = '', $object2 = '', $object3 = '', $object4 = '', $object5 = '', $object6 = '')
-    $EventBlock($DomainEvent($label, $id), $object1, $object2, $object3, $object4, $object5, $object6)
+!unquoted procedure DomainEvent($label, $id, $sticky1 = '', $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
+    $EventBlock($DomainEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
 !endfunction
 
 !function $IntegrationEvent($label, $id)
-    !return $EventStormingObject('file', 'IntegrationEvent', $label, $id)
+    !return $EventStormingSticky('file', 'IntegrationEvent', $label, $id)
 !endfunction
 
 !unquoted procedure IntegrationEvent($label, $id)
     $IntegrationEvent($label, $id)
 !endfunction
 
-!unquoted procedure IntegrationEvent($label, $id, $object1, $object2 = '', $object3 = '', $object4 = '', $object5 = '', $object6 = '')
-    $EventBlock($IntegrationEvent($label, $id), $object1, $object2, $object3, $object4, $object5, $object6)
+!unquoted procedure IntegrationEvent($label, $id, $sticky1, $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
+    $EventBlock($IntegrationEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
 !endfunction
 
 !unquoted procedure Blocker($label, $id)
-    $EventStormingObject('file', 'Blocker', $label, $id)
+    $EventStormingSticky('file', 'Blocker', $label, $id)
 !endfunction
 
 !unquoted procedure Opportunity($label, $id)
-    $EventStormingObject('file', 'Opportunity', $label, $id)
+    $EventStormingSticky('file', 'Opportunity', $label, $id)
 !endfunction
 
 !function $Aggregate($label, $id='')
-    !return $EventStormingObject('file', 'Aggregate', $label, $id)
+    !return $EventStormingSticky('file', 'Aggregate', $label, $id)
 !endfunction
 
 !function $Command($label, $id='')
-    !return $EventStormingObject('file', 'Command', $label, $id)
+    !return $EventStormingSticky('file', 'Command', $label, $id)
 !endfunction
 
 !function $User($label, $id='')
-    !return $EventStormingObject('person', 'User', $label, $id)
+    !return $EventStormingSticky('person', 'User', $label, $id)
 !endfunction
 
 !function $ReadModel($label, $id='')
-    !return $EventStormingObject('file', 'ReadModel', $label, $id)
+    !return $EventStormingSticky('file', 'ReadModel', $label, $id)
 !endfunction
 
 !function $Policy($label, $id='')
-    !return $EventStormingObject('file', 'Policy', $label, $id)
+    !return $EventStormingSticky('file', 'Policy', $label, $id)
 !endfunction
 
 !function $System($label, $id='')
-    !return $EventStormingObject('file', 'System', $label, $id)
+    !return $EventStormingSticky('file', 'System', $label, $id)
 !endfunction
 
 !unquoted procedure SubDomain($label, $id = '')
@@ -141,12 +141,12 @@
     !endif
 !endprocedure
 
-!unquoted procedure $EventBlock($event, $object1='', $object2='', $object3='', $object4='', $object5='', $object6='')
+!unquoted procedure $EventBlock($event, $sticky1='', $sticky2='', $sticky3='', $sticky4='', $sticky5='', $sticky6='')
     !assert $GetStereotype($event) == 'DomainEvent' || $GetStereotype($event) == 'IntegrationEvent'
 
     'All variable names with double underscores to omit name conflicts
     !$__eventId__ = $GetId($event)
-    !$__firstObjectId__ = $__eventId__
+    !$__firstStickyId__ = $__eventId__
     !$__user__ = ''
     !$__policy__ = ''
     !$__command__ = ''
@@ -154,118 +154,118 @@
     !$__aggregate__ = ''
     !$__readModel__ = ''
 
-    ' There are no arrays in PlantUML, so we have to check each object separately
-    !if ($object1 != '')
-        !$object1Stereotype = $GetStereotype($object1)
-        !if ($object1Stereotype == 'Aggregate')
-            !$__aggregate__ = $object1
-        !elseif ($object1Stereotype == 'Command')
-            !$__command__ = $object1
-        !elseif ($object1Stereotype == 'User')
-            !$__user__ = $object1
-        !elseif ($object1Stereotype == 'Policy')
-            !$__policy__ = $object1
-        !elseif ($object1Stereotype == 'ReadModel')
-            !$__readModel__ = $object1
-        !elseif ($object1Stereotype == 'System')
-            !$__system__ = $object1
+    ' There are no arrays in PlantUML, so we have to check each sticky separately
+    !if ($sticky1 != '')
+        !$sticky1Stereotype = $GetStereotype($sticky1)
+        !if ($sticky1Stereotype == 'Aggregate')
+            !$__aggregate__ = $sticky1
+        !elseif ($sticky1Stereotype == 'Command')
+            !$__command__ = $sticky1
+        !elseif ($sticky1Stereotype == 'User')
+            !$__user__ = $sticky1
+        !elseif ($sticky1Stereotype == 'Policy')
+            !$__policy__ = $sticky1
+        !elseif ($sticky1Stereotype == 'ReadModel')
+            !$__readModel__ = $sticky1
+        !elseif ($sticky1Stereotype == 'System')
+            !$__system__ = $sticky1
         !else
-            !assert %false() : "Unknown stereotype: " + $object1Stereotype
+            !assert %false() : "Unknown stereotype: " + $sticky1Stereotype
         !endif
     !endif
 
-    !if ($object2 != '')
-        !$object2Stereotype = $GetStereotype($object2)
-        !if ($object2Stereotype == 'Aggregate')
-            !$__aggregate__ = $object2
-        !elseif ($object2Stereotype == 'Command')
-            !$__command__ = $object2
-        !elseif ($object2Stereotype == 'User')
-            !$__user__ = $object2
-        !elseif ($object2Stereotype == 'Policy')
-            !$__policy__ = $object2
-        !elseif ($object2Stereotype == 'ReadModel')
-            !$__readModel__ = $object2
-        !elseif ($object2Stereotype == 'System')
-            !$__system__ = $object2
+    !if ($sticky2 != '')
+        !$sticky2Stereotype = $GetStereotype($sticky2)
+        !if ($sticky2Stereotype == 'Aggregate')
+            !$__aggregate__ = $sticky2
+        !elseif ($sticky2Stereotype == 'Command')
+            !$__command__ = $sticky2
+        !elseif ($sticky2Stereotype == 'User')
+            !$__user__ = $sticky2
+        !elseif ($sticky2Stereotype == 'Policy')
+            !$__policy__ = $sticky2
+        !elseif ($sticky2Stereotype == 'ReadModel')
+            !$__readModel__ = $sticky2
+        !elseif ($sticky2Stereotype == 'System')
+            !$__system__ = $sticky2
         !else
-            !assert %false() : "Unknown stereotype: " + $object2Stereotype
+            !assert %false() : "Unknown stereotype: " + $sticky2Stereotype
         !endif
     !endif
 
-    !if ($object3 != '')
-        !$object3Stereotype = $GetStereotype($object3)
-        !if ($object3Stereotype == 'Aggregate')
-            !$__aggregate__ = $object3
-        !elseif ($object3Stereotype == 'Command')
-            !$__command__ = $object3
-        !elseif ($object3Stereotype == 'User')
-            !$__user__ = $object3
-        !elseif ($object3Stereotype == 'Policy')
-            !$__policy__ = $object3
-        !elseif ($object3Stereotype == 'ReadModel')
-            !$__readModel__ = $object3
-        !elseif ($object3Stereotype == 'System')
-            !$__system__ = $object3
+    !if ($sticky3 != '')
+        !$sticky3Stereotype = $GetStereotype($sticky3)
+        !if ($sticky3Stereotype == 'Aggregate')
+            !$__aggregate__ = $sticky3
+        !elseif ($sticky3Stereotype == 'Command')
+            !$__command__ = $sticky3
+        !elseif ($sticky3Stereotype == 'User')
+            !$__user__ = $sticky3
+        !elseif ($sticky3Stereotype == 'Policy')
+            !$__policy__ = $sticky3
+        !elseif ($sticky3Stereotype == 'ReadModel')
+            !$__readModel__ = $sticky3
+        !elseif ($sticky3Stereotype == 'System')
+            !$__system__ = $sticky3
         !else
-            !assert %false() : "Unknown stereotype: " + $object3Stereotype
+            !assert %false() : "Unknown stereotype: " + $sticky3Stereotype
         !endif
     !endif
 
-    !if ($object4 != '')
-        !$object4Stereotype = $GetStereotype($object4)
-        !if ($object4Stereotype == 'Aggregate')
-            !$__aggregate__ = $object4
-        !elseif ($object4Stereotype == 'Command')
-            !$__command__ = $object4
-        !elseif ($object4Stereotype == 'User')
-            !$__user__ = $object4
-        !elseif ($object4Stereotype == 'Policy')
-            !$__policy__ = $object4
-        !elseif ($object4Stereotype == 'ReadModel')
-            !$__readModel__ = $object4
-        !elseif ($object4Stereotype == 'System')
-            !$__system__ = $object4
+    !if ($sticky4 != '')
+        !$sticky4Stereotype = $GetStereotype($sticky4)
+        !if ($sticky4Stereotype == 'Aggregate')
+            !$__aggregate__ = $sticky4
+        !elseif ($sticky4Stereotype == 'Command')
+            !$__command__ = $sticky4
+        !elseif ($sticky4Stereotype == 'User')
+            !$__user__ = $sticky4
+        !elseif ($sticky4Stereotype == 'Policy')
+            !$__policy__ = $sticky4
+        !elseif ($sticky4Stereotype == 'ReadModel')
+            !$__readModel__ = $sticky4
+        !elseif ($sticky4Stereotype == 'System')
+            !$__system__ = $sticky4
         !else
-            !assert %false() : "Unknown stereotype: " + $object4Stereotype
+            !assert %false() : "Unknown stereotype: " + $sticky4Stereotype
         !endif
     !endif
 
-    !if ($object5 != '')
-        !$object5Stereotype = $GetStereotype($object5)
-        !if ($object5Stereotype == 'Aggregate')
-            !$__aggregate__ = $object5
-        !elseif ($object5Stereotype == 'Command')
-            !$__command__ = $object5
-        !elseif ($object5Stereotype == 'User')
-            !$__user__ = $object5
-        !elseif ($object5Stereotype == 'Policy')
-            !$__policy__ = $object5
-        !elseif ($object5Stereotype == 'ReadModel')
-            !$__readModel__ = $object5
-        !elseif ($object5Stereotype == 'System')
-            !$__system__ = $object5
+    !if ($sticky5 != '')
+        !$sticky5Stereotype = $GetStereotype($sticky5)
+        !if ($sticky5Stereotype == 'Aggregate')
+            !$__aggregate__ = $sticky5
+        !elseif ($sticky5Stereotype == 'Command')
+            !$__command__ = $sticky5
+        !elseif ($sticky5Stereotype == 'User')
+            !$__user__ = $sticky5
+        !elseif ($sticky5Stereotype == 'Policy')
+            !$__policy__ = $sticky5
+        !elseif ($sticky5Stereotype == 'ReadModel')
+            !$__readModel__ = $sticky5
+        !elseif ($sticky5Stereotype == 'System')
+            !$__system__ = $sticky5
         !else
-            !assert %false() : "Unknown stereotype: " + $object5Stereotype
+            !assert %false() : "Unknown stereotype: " + $sticky5Stereotype
         !endif
     !endif
 
-    !if ($object6 != '')
-        !$object6Stereotype = $GetStereotype($object6)
-        !if ($object6Stereotype == 'Aggregate')
-            !$__aggregate__ = $object6
-        !elseif ($object6Stereotype == 'Command')
-            !$__command__ = $object6
-        !elseif ($object6Stereotype == 'User')
-            !$__user__ = $object6
-        !elseif ($object6Stereotype == 'Policy')
-            !$__policy__ = $object6
-        !elseif ($object6Stereotype == 'ReadModel')
-            !$__readModel__ = $object6
-        !elseif ($object6Stereotype == 'System')
-            !$__system__ = $object6
+    !if ($sticky6 != '')
+        !$sticky6Stereotype = $GetStereotype($sticky6)
+        !if ($sticky6Stereotype == 'Aggregate')
+            !$__aggregate__ = $sticky6
+        !elseif ($sticky6Stereotype == 'Command')
+            !$__command__ = $sticky6
+        !elseif ($sticky6Stereotype == 'User')
+            !$__user__ = $sticky6
+        !elseif ($sticky6Stereotype == 'Policy')
+            !$__policy__ = $sticky6
+        !elseif ($sticky6Stereotype == 'ReadModel')
+            !$__readModel__ = $sticky6
+        !elseif ($sticky6Stereotype == 'System')
+            !$__system__ = $sticky6
         !else
-            !assert %false() : "Unknown stereotype: " + $object6Stereotype
+            !assert %false() : "Unknown stereotype: " + $sticky6Stereotype
         !endif
     !endif
 
@@ -295,7 +295,7 @@
             !$__systemId__ = $GetId($__system__)
             $__systemId__ - $__eventId__
 
-            !$__firstObjectId__ = $__systemId__
+            !$__firstStickyId__ = $__systemId__
         !endif
 
         !$__commandId__ = ''
@@ -305,7 +305,7 @@
             $__command__
 
             !$__commandId__ = $GetId($__command__)
-            !$__firstObjectId__ = $__commandId__
+            !$__firstStickyId__ = $__commandId__
 
             !if ($__systemId__ != '')
                 $__commandId__ - $__systemId__
@@ -320,7 +320,7 @@
                 !$__policyId__ = $GetId($__policy__)
                 $__policyId__ - $__commandId__
 
-                !$__firstObjectId__ = $__policyId__
+                !$__firstStickyId__ = $__policyId__
             !endif
 
             !if ($__user__ != '')
@@ -332,7 +332,7 @@
                 $__userId__ - $__commandId__
                 $__inputId__ -[hidden] $__userId__
 
-                !$__firstObjectId__ = $__userId__
+                !$__firstStickyId__ = $__userId__
             !endif
 
             !if ($__user__ != '' && $__policy__ != '')
@@ -340,8 +340,8 @@
                 $__policyId__ -[hidden] $__userId__
             !endif
         !else
-            !assert $__command__ == '' && $__user__ == '' : "User objects can only be set with a Command."
-            !assert $__command__ == '' && $__policy__ == '' : "Policy objects can only be set with a Command."
+            !assert $__command__ == '' && $__user__ == '' : "User stickies can only be set with a Command."
+            !assert $__command__ == '' && $__policy__ == '' : "Policy stickies can only be set with a Command."
         !endif
 
         !if ($__readModel__ != '')
@@ -356,7 +356,7 @@
             !endif
         !endif
 
-        $__inputId__ - $__firstObjectId__
+        $__inputId__ - $__firstStickyId__
 !endprocedure
 
 show stereotype
