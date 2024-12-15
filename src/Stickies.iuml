@@ -1,4 +1,4 @@
-!function $EventStormingSticky($shape, $stereotype, $label, $id = '')
+!function $PrintEventStormingSticky($shape, $stereotype, $label, $id = '')
     !if ($id != '')
         !return $shape + ' "' + $label + '"' + ' as ' + $id + ' <<' + $stereotype + '>>'
     !endif
@@ -7,57 +7,49 @@
 !endfunction
 
 !function $DomainEvent($label, $id)
-    !return $EventStormingSticky('file', 'DomainEvent', $label, $id)
+    !return $PrintEventStormingSticky('file', 'DomainEvent', $label, $id)
 !endfunction
 
 !unquoted procedure IntegrationEvent($label, $id)
     $DomainEvent($label, $id)
 !endfunction
 
-!unquoted procedure DomainEvent($label, $id, $sticky1 = '', $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
-    $EventBlock($DomainEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
-!endfunction
-
 !function $IntegrationEvent($label, $id)
-    !return $EventStormingSticky('file', 'IntegrationEvent', $label, $id)
+    !return $PrintEventStormingSticky('file', 'IntegrationEvent', $label, $id)
 !endfunction
 
 !unquoted procedure IntegrationEvent($label, $id)
     $IntegrationEvent($label, $id)
 !endfunction
 
-!unquoted procedure IntegrationEvent($label, $id, $sticky1, $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
-    $EventBlock($IntegrationEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
-!endfunction
-
 !unquoted procedure Blocker($label, $id)
-    $EventStormingSticky('file', 'Blocker', $label, $id)
+    $PrintEventStormingSticky('file', 'Blocker', $label, $id)
 !endfunction
 
 !unquoted procedure Opportunity($label, $id)
-    $EventStormingSticky('file', 'Opportunity', $label, $id)
+    $PrintEventStormingSticky('file', 'Opportunity', $label, $id)
 !endfunction
 
 !function $Aggregate($label, $id='')
-    !return $EventStormingSticky('file', 'Aggregate', $label, $id)
+    !return $PrintEventStormingSticky('file', 'Aggregate', $label, $id)
 !endfunction
 
 !function $Command($label, $id='')
-    !return $EventStormingSticky('file', 'Command', $label, $id)
+    !return $PrintEventStormingSticky('file', 'Command', $label, $id)
 !endfunction
 
 !function $User($label, $id='')
-    !return $EventStormingSticky('person', 'User', $label, $id)
+    !return $PrintEventStormingSticky('person', 'User', $label, $id)
 !endfunction
 
 !function $ReadModel($label, $id='')
-    !return $EventStormingSticky('file', 'ReadModel', $label, $id)
+    !return $PrintEventStormingSticky('file', 'ReadModel', $label, $id)
 !endfunction
 
 !function $Policy($label, $id='')
-    !return $EventStormingSticky('file', 'Policy', $label, $id)
+    !return $PrintEventStormingSticky('file', 'Policy', $label, $id)
 !endfunction
 
 !function $System($label, $id='')
-    !return $EventStormingSticky('file', 'System', $label, $id)
+    !return $PrintEventStormingSticky('file', 'System', $label, $id)
 !endfunction

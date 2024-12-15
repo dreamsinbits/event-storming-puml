@@ -92,3 +92,31 @@
 !function $IsStickyReadModel($sticky)
     !return $IsStickyStereotype($sticky, 'ReadModel')
 !endfunction
+
+!function $GenerateId($eventId, $sticky)
+    !if $IsStickyAggregate($sticky)
+        !return $eventId + '_Aggregate'
+    !endif
+
+    !if $IsStickyCommand($sticky)
+        !return $eventId + '_Command'
+    !endif
+
+    !if $IsStickyUser($sticky)
+        !return $eventId + '_User'
+    !endif
+
+    !if $IsStickyPolicy($sticky)
+        !return $eventId + '_Policy'
+    !endif
+
+    !if $IsStickySystem($sticky)
+        !return $eventId + '_System'
+    !endif
+
+    !if $IsStickyReadModel($sticky)
+        !return $eventId + '_ReadModel'
+    !endif
+
+    !assert %false() : "Could not generate ID for sticky with unknown stereotype: " + $sticky
+!endfunction
