@@ -306,13 +306,6 @@
         !$__commandId__ = $GenerateId($__eventId__, $__command__)
         !$__firstStickyId__ = $__commandId__
 
-        !$__policyId__ = ''
-
-        !if ($__policy__ != '')
-            !$__policyId__ = $GenerateId($__eventId__, $__policy__)
-            !$__firstStickyId__ = $__policyId__
-        !endif
-
         !$__userId__ = ''
 
         !if ($__user__ != '')
@@ -320,9 +313,16 @@
             !$__firstStickyId__ = $__userId__
         !endif
 
+        !$__policyId__ = ''
+
+        !if ($__policy__ != '')
+            !$__policyId__ = $GenerateId($__eventId__, $__policy__)
+            !$__firstStickyId__ = $__policyId__
+        !endif
+
         !if ($__user__ != '' && $__policy__ != '')
-            $__userId__ -[hidden] $__policyId__
             $__policyId__ -[hidden] $__userId__
+            $__userId__ -[hidden] $__policyId__
         !endif
     !else
         !assert $__command__ == '' && $__user__ == '' : "User stickies can only be set with a Command."
