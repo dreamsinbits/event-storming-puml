@@ -1,6 +1,6 @@
-!include ./Theme.iuml
-!include ./Utils.iuml
-!include ./Stickies.iuml
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/feat/initial/src/Theme.iuml
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/feat/initial/src/Utils.iuml
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/feat/initial/src/Stickies.iuml
 
 !unquoted procedure SubDomain($label, $id = '')
     !if $id == ''
