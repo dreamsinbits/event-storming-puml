@@ -39,6 +39,8 @@ This is something I'm planning to improve in the future.
 
 @enduml
 ```
+### Examples
+Refer to the [examples](examples) and [tests](tests) folders for examples.
 
 ## Functionality
 To add a `DomainEvent` or `IntegrationEvent` to your diagram, use the following syntax:
@@ -175,3 +177,7 @@ SubDomain('My subdomain', MySubdomain) {
   A good practice could be to split each subdomain into a separate sub.
   Refer to [EventStormingShoppingElephant.puml](examples/EventStormingShoppingElephant.puml) and 
   [ShoppingElephantShopping.puml](examples/ShoppingElephantShopping.puml) for an example.
+
+## Credits
+I started this project after I saw the [plantuml-lib](https://github.com/tmorin/plantuml-libs) from [Thibault Morin](https://github.com/tmorin).
+Thank you for the inspiration!
