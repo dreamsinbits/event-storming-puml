@@ -10,6 +10,7 @@ as more information about the domain is obtained.
 Finally,
 it's possible to group the stickies into subdomains and processes.
 
+![Sub-Domains and Processes](examples/out/SubDomainsAndProcesses.svg)
 ![ShoppingElephant example](examples/out/ShoppingElephantShopping.svg)
 
 ## How to Use
