@@ -40,5 +40,5 @@ jobs:
           commit_user_name: "PlantUML Diagramm Renderer"
           commit_user_email: "plantuml@trapp-software.de"
           commit_author: "PLantUML <plantuml@trapp-software.de>"
-          commit_message: "Generated SVG images for PlantUML diagrams"
+          commit_message: "docs(examples): Generated SVG images for PlantUML diagrams"
           branch: ${{ github.head_ref }}
