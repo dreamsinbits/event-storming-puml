@@ -1,5 +1,4 @@
 @startuml
-
 !include ../src/EventStorming.iuml
 
 DomainEvent('A state change that happened in a subdomain', SomethingHappened, $Command('Initiates a state change'), $Aggregate('Holds a state and has behaviors for changing it. Informs about state changes via domain events.'), $Policy('Has to be enforced whenever something happens'), $System('Performs a command e.g. External Authentication System'), $User('Triggers a command'), $ReadModel('Data needed to perform the command'))
