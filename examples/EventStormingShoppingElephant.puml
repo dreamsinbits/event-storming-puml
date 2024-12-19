@@ -1,7 +1,7 @@
 @startuml
 !startsub DECL
 
-!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/feat/initial/src/EventStorming.iuml
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/main/src/EventStorming.iuml
 
 !$user = 'User'
 !$recurringItemsList = 'Recurring items list'
