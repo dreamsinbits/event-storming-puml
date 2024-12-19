@@ -340,6 +340,6 @@
     $PrintEventStickies($DomainEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
 !endfunction
 
-!unquoted procedure IntegrationEvent($label, $id, $sticky1, $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
+!unquoted procedure IntegrationEvent($label, $id, $sticky1 = '', $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
     $PrintEventStickies($IntegrationEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
 !endfunction
