@@ -1,4 +1,4 @@
-name: Export PlantUML diagrams of the examples directory
+name: Run positive tests
 
 on:
   push:
