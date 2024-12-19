@@ -117,7 +117,7 @@ SubDomain('Shopping Planning', ShoppingPlanning) {
 !startsub Shopping
 
 SubDomain('Shopping', Shopping) {
-    Process('Checkout'){
+    Process('Checkout', CheckoutProcess){
         DomainEvent('Started checkout', StartedCheckout, $Aggregate($shopping), $Command(StartCheckout), $User($shopper))
         DomainEvent('Presented vouchers', PresentedVouchers, $Aggregate($shoppingList), $Command(PresentVouchers), $Policy('Whenever the shopping list contains vouchers'))
         DomainEvent('Redeemed voucher', RedeemedVoucher, $Aggregate(Voucher), $Command(RedeemVoucher), $User($shopper))
@@ -150,6 +150,8 @@ SubDomain('Shopping', Shopping) {
         CheckedAllItemsInShoppingList -[hidden] ReturnedProductToShelf_Input
         ReturnedProductToShelf - UncheckedItemInShoppingList_Input
     }
+
+    ShoppingProcess -[hidden]--- CheckoutProcess
 }
 
 !endsub
