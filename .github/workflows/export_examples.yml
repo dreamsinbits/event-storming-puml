@@ -14,22 +14,31 @@ jobs:
         uses: actions/checkout@v4.2.2
       - name: Get all changed files
         id: get-changed-files
-        uses: jitterbit/get-changed-files@v1
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            const before = process.env.GITHUB_EVENT_BEFORE || '';
+            const sha = process.env.GITHUB_SHA;
+            let changedFiles = [];
+            if (before) {
+              changedFiles = execSync(`git diff --name-only ${before} ${sha}`).toString().trim().split('\n');
+            } else {
+              changedFiles = execSync(`git ls-tree -r ${sha} --name-only`).toString().trim().split('\n');
+            }
+            return { changedFiles };
       - name: Get changed UML files
         id: get-changed-uml-files
         run: |
           puml_files=''
-          for changed_file in ${{ steps.get-changed-files.outputs.added_modified}}; do
+          for changed_file in ${{ steps.get-changed-files.outputs.changedFiles }}; do
             extension="${changed_file##*.}"
-          
             if [[ "${extension}" == "puml" && "${changed_file}" == examples/* ]]; then
-              # add puml file
               puml_files="${puml_files} ${changed_file}"
               echo "Added file: ${changed_file}"
             fi
           done
           echo "puml-files=${puml_files}" >> $GITHUB_OUTPUT
-
       - name: Generate SVG Diagrams
         uses: dreamsinbits/export-plantuml-action@v1
         with:
