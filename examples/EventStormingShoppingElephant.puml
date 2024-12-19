@@ -9,8 +9,6 @@
 !$shoppingList = 'Shopping list'
 !$mealPlan = 'Meal plan'
 !$shopper = 'Shopper'
-!$shoppingView = 'Shopping View'
-!$voucherView = 'Voucher View'
 !$shopping = 'Shopping'
 !$loginView = 'Username, password'
 !$registerView = 'First name, last name, e-mail, username, password'
