@@ -4,17 +4,17 @@
 
 !unquoted procedure SubDomain($label, $id = '')
     !if $id == ''
-        storage "$label" #LightBlue
+        storage "$label" <<SubDomain>> #LightBlue
     !else
-        storage "$label" as $id #LightBlue
+        storage "$label" <<SubDomain>> as $id #LightBlue
     !endif
 !endprocedure
 
 !unquoted procedure Process($label, $id = '')
     !if $id == ''
-        rectangle "$label"
+        rectangle "$label" <<Process>>
     !else
-        rectangle "$label" as $id
+        rectangle "$label" <<Process>> as $id
     !endif
 !endprocedure
 
