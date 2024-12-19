@@ -180,6 +180,11 @@ SubDomain('My subdomain', MySubdomain) {
   Refer to [EventStormingShoppingElephant.puml](examples/EventStormingShoppingElephant.puml) and 
   [ShoppingElephantShopping.puml](examples/ShoppingElephantShopping.puml) for an example.
 
+## Contribute
+I appreciate every interest in contributing.
+For improvements feel free to create pull requests.
+Please use the [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) scheme for your commit messages.
+
 ## Credits
 I started this project after I saw the [plantuml-lib](https://github.com/tmorin/plantuml-libs) from [Thibault Morin](https://github.com/tmorin).
 Thank you for the inspiration!
