@@ -9,12 +9,8 @@
 !$shoppingList = 'Shopping list'
 !$mealPlan = 'Meal plan'
 !$shopper = 'Shopper'
-!$mealPlanView = 'Meal Plan View'
-!$shoppingListView = 'Shopping List View'
-!$sharingView = 'Sharing View'
 !$shoppingView = 'Shopping View'
 !$voucherView = 'Voucher View'
-!$registerView = 'Register View'
 !$shopping = 'Shopping'
 !$loginView = 'Username, password'
 !$registerView = 'First name, last name, e-mail, username, password'
@@ -24,10 +20,25 @@
 !startsub UserManagement
 
 SubDomain('User Management', UserManagement) {
-    DomainEvent('Deleted user', DeletedUser, $Aggregate($user), $Command(DeleteUser), $User($shopper))
-    DomainEvent('Logged out', LoggedOut, $Aggregate($user), $Command(LogOutUser), $User($shopper), $ReadModel($loginView))
-    DomainEvent('Logged in', LoggedIn, $Aggregate($user), $Command(LogInUser), $User($shopper), $ReadModel($loginView))
-    DomainEvent('Registered user', RegisteredUser, $Aggregate($user), $Command(RegisterUser), $User($shopper), $ReadModel($registerView))
+    Process('Logging in', LoggingIn) {
+        DomainEvent('Logged out', LoggedOut, $Aggregate($user), $Command(LogOutUser), $User($shopper), $ReadModel($loginView))
+        DomainEvent('Logged in', LoggedIn, $Aggregate($user), $Command(LogInUser), $User($shopper), $ReadModel($loginView))
+    }
+
+    Process('User deletion', UserDeletion) {
+        DomainEvent('Deleted user', DeleteUser, $Aggregate($user), $Command(DeleteUser), $User($shopper))
+        User('Admin', Admin)
+
+        Admin - DeleteUser_Command
+        Admin -[hidden] DeleteUser_User
+    }
+
+    Process('User Registration', UserRegistration) {
+        DomainEvent('Registered user', RegisteredUser, $Aggregate($user), $Command(RegisterUser), $User($shopper), $ReadModel($registerView))
+    }
+
+    UserRegistration -[hidden]--- UserDeletion
+    UserRegistration -[hidden] LoggingIn
 }
 
 !endsub
@@ -35,7 +46,9 @@ SubDomain('User Management', UserManagement) {
 !startsub RecipeManagement
 
 SubDomain('Recipe Management', RecipeManagement) {
-    DomainEvent('Added recipe', AddedRecipe, $Aggregate($recipe), $Command(AddRecipe), $User($shopper))
+    Process('Adding of recipes') {
+        DomainEvent('Added recipe', AddedRecipe, $Aggregate($recipe), $Command(AddRecipe), $User($shopper), $System('External recipe system'))
+    }
 }
 
 !endsub
@@ -43,10 +56,17 @@ SubDomain('Recipe Management', RecipeManagement) {
 !startsub MealPlanning
 
 SubDomain('Meal Planning', MealPlanning) {
-    DomainEvent('Removed meal from meal plan', RemovedMealFromMealPlan, $Aggregate($mealPlan), $Command(RemoveMealFromMealPlan), $User($shopper), $ReadModel($mealPlanView))
-    DomainEvent('Added meal to meal plan', AddedMealToMealPlan, $Aggregate($mealPlan), $Command(AddMealToMealPlan), $User($shopper), $ReadModel($mealPlanView))
-    DomainEvent('Created new meal plan', CreatedNewMealPlan, $Aggregate($mealPlan), $Command(CreateEmptyMealPlan), $User($shopper), $ReadModel($mealPlanView))
-    DomainEvent('Made meal plan a favorite', MadeMealPlanAFavorite, $Aggregate($mealPlan), $Command(FavoriteMealPlan), $User($shopper), $ReadModel($mealPlanView))
+    Process('Favorite meal plan', FavoriteMealPlan) {
+        DomainEvent('Made meal plan a favorite', MadeMealPlanAFavorite, $Aggregate($mealPlan), $Command(FavoriteMealPlan), $User($shopper))
+    }
+
+    Process('Meal plan editing', MealPlanEditing) {
+        DomainEvent('Removed meal from meal plan', RemovedMealFromMealPlan, $Aggregate($mealPlan), $Command(RemoveMealFromMealPlan), $User($shopper), $ReadModel('Added meals'))
+        DomainEvent('Added meal to meal plan', AddedMealToMealPlan, $Aggregate($mealPlan), $Command(AddMealToMealPlan), $User($shopper), $ReadModel('Available meals'))
+        DomainEvent('Created new meal plan', CreatedNewMealPlan, $Aggregate($mealPlan), $Command(CreateEmptyMealPlan), $User($shopper), $ReadModel('Meal plan name'))
+    }
+
+    MealPlanEditing -[hidden] FavoriteMealPlan
 }
 
 !endsub
@@ -54,29 +74,44 @@ SubDomain('Meal Planning', MealPlanning) {
 !startsub ShoppingPlanning
 
 SubDomain('Shopping Planning', ShoppingPlanning) {
-    DomainEvent('Shared shopping list with user', SharedShoppingListWithUser, $Aggregate($shoppingList), $Command(ShareShoppingListWithUser), $User($shopper), $ReadModel($sharingView))
+    Process('Sharing of shopping lists') {
+        DomainEvent('Shared shopping list with user', SharedShoppingListWithUser, $Aggregate($shoppingList), $Command(ShareShoppingListWithUser), $User($shopper), $ReadModel('Available users'))
+    }
 
-    DomainEvent('Created shopping list template', CreatedShoppingListTemplate, $Aggregate($shoppingList), $Command(CreateShoppingListTemplate), $User($shopper), $ReadModel($shoppingListView))
-    note "Is created from a shopping list." as TemplateNote
-    CreatedShoppingListTemplate_Aggregate .. TemplateNote
+    Process('Shopping list template creation') {
+        DomainEvent('Created shopping list template', CreatedShoppingListTemplate, $Aggregate($shoppingList), $Command(CreateShoppingListTemplate), $User($shopper))
+        note "Is created from a shopping list." as TemplateNote
+        CreatedShoppingListTemplate_Aggregate .. TemplateNote
+    }
 
-    DomainEvent('Removed voucher', RemovedVoucher, $Aggregate($shoppingList), $Command(RemoveVoucherFromShoppingList), $User($shopper), $ReadModel($shoppingListView))
-    DomainEvent('Added voucher', AddedVoucher, $Aggregate($shoppingList), $Command(AddVoucherToShoppingList), $User($shopper), $ReadModel($shoppingListView))
-    note "This must also be possible while shopping, perhaps the user finds some vouchers in the shop." as AddVoucherNote
-    AddedVoucher .. AddVoucherNote
+    Process('Voucher handling') {
+        DomainEvent('Removed voucher', RemovedVoucher, $Aggregate($shoppingList), $Command(RemoveVoucherFromShoppingList), $User($shopper), $ReadModel('Available vouchers'))
+        DomainEvent('Added voucher', AddedVoucher, $Aggregate($shoppingList), $Command(AddVoucherToShoppingList), $User($shopper), $ReadModel('Voucher image or hyperlink'))
+        note "This must also be possible while shopping, perhaps the user finds some vouchers in the shop." as AddVoucherNote
+        AddedVoucher .. AddVoucherNote
+    }
 
-    DomainEvent('Removed product', RemovedProduct, $Aggregate($shoppingList), $Command(RemoveProductFromShoppingList), $User($shopper), $ReadModel($shoppingListView))
-    DomainEvent('Added product', AddedProduct, $Aggregate($shoppingList), $Command(AddProductToShoppingList), $User($shopper), $ReadModel($shoppingListView))
-    DomainEvent('Marked checked ingredients of removed meal recipe', MarkedCheckedIngredientsOfRemovedMealRecipe, $Command(MarkCheckedIngredientsOfRemovedMealRecipe), $Aggregate($shoppingList), $ReadModel($shoppingListView))
-    DomainEvent('Removed ingredients of removed meal from shopping list', RemovedIngredientsOfRemovedMealRecipe, $Command(RemoveMealIngredients), $Aggregate($shoppingList), $ReadModel($shoppingListView))
-    DomainEvent('Added ingredients of meal', AddedIngredientsOfMealRecipe, $Command(AddMealIngredients), $Aggregate($shoppingList), $ReadModel($shoppingListView))
-    DomainEvent('Added unchecked products from last shopping', AddedUncheckedProductsFromLastShopping, $Command(AddUncheckedProductsFromLastShopping), $Aggregate($shoppingList), $ReadModel($shoppingListView))
-    DomainEvent('Added meal plan', AddedMealPlan, $Aggregate($mealPlan), $Command(AddMealPlanToShoppingList), $User($shopper), $ReadModel($shoppingListView))
-    DomainEvent('Created new shopping list', CreatedNewShoppingList, $Aggregate($shoppingList), $Command(CreateShoppingList), $User($shopper))
-    note "Can be created from a template, an old shopping list or from scratch.\nIt's possible that there are multiple lists" as ShoppingListCreationNote
-    CreatedNewShoppingList_Aggregate .. ShoppingListCreationNote
+    Process('Editing shopping list') {
+        DomainEvent('Created new shopping list', CreatedNewShoppingList, $Aggregate($shoppingList), $Command(CreateShoppingList), $User($shopper), $ReadModel('Available templates, Old shopping lists'))
+        note "Can be created from a template, an old shopping list or from scratch.\nIt's possible that there are multiple lists" as ShoppingListCreationNote
+        ShoppingListCreationNote . CreatedNewShoppingList_Aggregate
 
-    CreatedNewShoppingList -[hidden] AddedMealPlan
+        DomainEvent('Added meal plan', AddedMealPlan, $Aggregate($mealPlan), $Command(AddMealPlanToShoppingList), $User($shopper), $ReadModel('Available meal plans'))
+        DomainEvent('Added unchecked products from last shopping', AddedUncheckedProductsFromLastShopping, $Command(AddUncheckedProductsFromLastShopping), $Aggregate($shoppingList), $Policy('Whenever the last shopping still contains unchecked products in the shopping list'), $ReadModel('Last shopping'))
+        DomainEvent('Added ingredients of meal', AddedIngredientsOfMealRecipe, $Command(AddMealIngredients), $Aggregate($shoppingList), $ReadModel('Meal ingredients'), $Policy('Whenever a meal plan was added'))
+        DomainEvent('Removed ingredients of removed meal from shopping list', RemovedIngredientsOfRemovedMealRecipe, $Command(RemoveMealIngredients), $Aggregate($shoppingList), $ReadModel('Meal plan'), $Policy('Whenever a meal was removed from the meal plan'))
+        DomainEvent('Flagged checked ingredients of removed meal recipe', FlaggedCheckedIngredientsOfRemovedMealRecipe, $Command(MarkCheckedIngredientsOfRemovedMealRecipe), $Aggregate($shoppingList), $ReadModel('Removed meal'), $Policy('Whenever a meal was removed from the meal plan but ingredients where already checked'))
+        DomainEvent('Added product', AddedProduct, $Aggregate($shoppingList), $Command(AddProductToShoppingList), $User($shopper), $ReadModel('Product name, List of already used products'))
+        DomainEvent('Removed product', RemovedProduct, $Aggregate($shoppingList), $Command(RemoveProductFromShoppingList), $User($shopper), $ReadModel('Added products'))
+
+        CreatedNewShoppingList - AddedUncheckedProductsFromLastShopping_Input
+        AddedUncheckedProductsFromLastShopping -[hidden] AddedMealPlan_Input
+        AddedMealPlan - AddedIngredientsOfMealRecipe_Input
+        AddedIngredientsOfMealRecipe -[hidden] RemovedIngredientsOfRemovedMealRecipe_Input
+        RemovedIngredientsOfRemovedMealRecipe -[hidden] FlaggedCheckedIngredientsOfRemovedMealRecipe_Input
+        FlaggedCheckedIngredientsOfRemovedMealRecipe -[hidden] AddedProduct_Input
+        AddedProduct -[hidden] RemovedProduct_Input
+    }
 }
 
 !endsub
@@ -84,21 +119,39 @@ SubDomain('Shopping Planning', ShoppingPlanning) {
 !startsub Shopping
 
 SubDomain('Shopping', Shopping) {
-    DomainEvent('Ended shopping', EndedShopping, $Aggregate($shopping), $Command(EndShopping), $User($shopper), $ReadModel($shoppingView))
-    DomainEvent('Received receipt', ReceivedReceipt, $Aggregate($shopping), $Command(ReceiveReceipt), $User($shopper), $ReadModel($shoppingView))
-    DomainEvent('Payed', Payed, $Aggregate($shopping), $Command(Pay), $User($shopper), $ReadModel($shoppingView))
-    DomainEvent('Redeemed all vouchers', RedeemedVouchers, $Aggregate($shoppingList), $ReadModel($voucherView))
-    DomainEvent('Redeemed voucher', RedeemedVoucher, $Aggregate($shoppingList), $Command(RedeemVoucher), $User($shopper), $ReadModel($voucherView))
-    DomainEvent('Presented vouchers', PresentedVouchers, $Aggregate($shoppingList), $Command(PresentVouchers), $ReadModel($voucherView))
-    DomainEvent('Started checkout', StartedCheckout, $Aggregate($shopping), $Command(StartCheckout), $User($shopper), $ReadModel($shoppingView))
-    DomainEvent('Checked item in shopping list', UncheckedItemInShoppingList, $Aggregate($shoppingList), $Command(UncheckItem), $User($shopper), $ReadModel($shoppingView))
-    DomainEvent('Returned product to shelf', ReturnedProductToShelf, $Aggregate('Shopping cart'), $Command(ReturnProductToShelf), $User($shopper), $ReadModel($shoppingView))
-    DomainEvent('Checked product in shopping list', CheckedItemInShoppingList, $Aggregate($shoppingList), $Command(CheckProduct), $User($shopper), $ReadModel($shoppingView))
-    DomainEvent('Put product in shopping cart', PutProductInShoppingCartEvent, $Aggregate('Shopping cart'), $Command(PutProductInShoppingCart), $User($shopper), $ReadModel($shoppingView))
-    note "This aggregate enables to show the user what is in the shopping cart." as ShoppingCartNote
-    PutProductInShoppingCartEvent_Aggregate .. ShoppingCartNote
+    Process('Checkout'){
+        DomainEvent('Started checkout', StartedCheckout, $Aggregate($shopping), $Command(StartCheckout), $User($shopper))
+        DomainEvent('Presented vouchers', PresentedVouchers, $Aggregate($shoppingList), $Command(PresentVouchers), $Policy('Whenever the shopping list contains vouchers'))
+        DomainEvent('Redeemed voucher', RedeemedVoucher, $Aggregate(Voucher), $Command(RedeemVoucher), $User($shopper))
+        DomainEvent('Redeemed all vouchers', RedeemedVouchers, $Aggregate($shoppingList))
+        DomainEvent('Payed', Payed, $Aggregate($shopping), $Command(Pay), $User($shopper), $ReadModel('Optional: Sum'))
+        DomainEvent('Received receipt', ReceivedReceipt, $Aggregate($shopping), $Command(ReceiveReceipt), $User($shopper), $ReadModel('Image of receipt'))
+        DomainEvent('Ended shopping', EndedShopping, $Aggregate($shopping), $Command(EndShopping), $User($shopper))
 
-    DomainEvent('Started shopping with shopping list', StartedShoppingWithShoppingList, $Aggregate($shoppingList), $Command(StartShopping), $User($shopper), $ReadModel($shoppingView))
+        StartedCheckout - PresentedVouchers_Input
+        PresentedVouchers -[hidden] RedeemedVoucher_Input
+        RedeemedVoucher - RedeemedVouchers_Input
+        RedeemedVouchers -[hidden] Payed_Input
+        Payed -[hidden] ReceivedReceipt_Input
+        ReceivedReceipt -[hidden] EndedShopping_Input
+    }
+
+    Process('Shopping', ShoppingProcess) {
+        DomainEvent('Started shopping with shopping list', StartedShoppingWithShoppingList, $Aggregate($shopping), $Command(StartShopping), $User($shopper), $ReadModel('Available shopping lists'))
+        DomainEvent('Put product in shopping cart', PutProductInShoppingCartEvent, $Aggregate('Shopping cart'), $Command(PutProductInShoppingCart), $User($shopper), $ReadModel('Shopping list, Product'))
+        note "This aggregate enables to show the user what is in the shopping cart." as ShoppingCartNote
+        ShoppingCartNote . PutProductInShoppingCartEvent_Aggregate
+        DomainEvent('Checked product in shopping list', CheckedItemInShoppingList, $Aggregate($shoppingList), $Command(CheckProduct), $ReadModel('Product'), $Policy('Whenever a product was put in the cart'))
+        DomainEvent('Checked all products in shopping list', CheckedAllItemsInShoppingList, $Aggregate($shoppingList))
+        DomainEvent('Returned product to shelf', ReturnedProductToShelf, $Aggregate('Shopping cart'), $Command(ReturnProductToShelf), $User($shopper), $ReadModel('Product'))
+        DomainEvent('Unchecked item in shopping list', UncheckedItemInShoppingList, $Aggregate($shoppingList), $Command(UncheckItem), $ReadModel('Product'), $Policy('Whenever a product was returned'))
+
+        StartedShoppingWithShoppingList -[hidden] PutProductInShoppingCartEvent_Input
+        PutProductInShoppingCartEvent - CheckedItemInShoppingList_Input
+        CheckedItemInShoppingList - CheckedAllItemsInShoppingList_Input
+        CheckedAllItemsInShoppingList -[hidden] ReturnedProductToShelf_Input
+        ReturnedProductToShelf - UncheckedItemInShoppingList_Input
+    }
 }
 
 !endsub

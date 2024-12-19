@@ -1,0 +1,17 @@
+@startuml
+
+!include ../src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethingHappened)
+
+DomainEvent('Something else happened', SomethingElseHappened, $Command('Do something else'), $Policy('Another policy'))
+
+note "This shows the start of a new event stickies block" as InputNote
+note "You can chain and set the order of event sticky blocks by referencing EventName_Input e.g. SomethingElseHappened_Input" as ChainNote
+
+SomethingHappened - SomethingElseHappened_Input
+
+InputNote -- SomethingHappened_Input
+ChainNote -- SomethingElseHappened_Input
+
+@enduml

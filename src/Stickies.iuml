@@ -10,45 +10,61 @@
     !return $PrintEventStormingSticky('file', 'DomainEvent', $label, $id)
 !endfunction
 
-!unquoted procedure IntegrationEvent($label, $id)
-    $DomainEvent($label, $id)
-!endfunction
-
 !function $IntegrationEvent($label, $id)
     !return $PrintEventStormingSticky('file', 'IntegrationEvent', $label, $id)
 !endfunction
 
-!unquoted procedure IntegrationEvent($label, $id)
-    $IntegrationEvent($label, $id)
-!endfunction
-
 !unquoted procedure Blocker($label, $id)
     $PrintEventStormingSticky('file', 'Blocker', $label, $id)
-!endfunction
+!endprocedure
 
 !unquoted procedure Opportunity($label, $id)
     $PrintEventStormingSticky('file', 'Opportunity', $label, $id)
-!endfunction
+!endprocedure
+
+!unquoted procedure Aggregate($label, $id='')
+    $PrintEventStormingSticky('file', 'Aggregate', $label, $id)
+!endprocedure
 
 !function $Aggregate($label, $id='')
     !return $PrintEventStormingSticky('file', 'Aggregate', $label, $id)
 !endfunction
 
+!unquoted procedure Command($label, $id='')
+    $PrintEventStormingSticky('file', 'Command', $label, $id)
+!endprocedure
+
 !function $Command($label, $id='')
     !return $PrintEventStormingSticky('file', 'Command', $label, $id)
 !endfunction
+
+!unquoted procedure User($label, $id='')
+    $PrintEventStormingSticky('person', 'User', $label, $id)
+!endprocedure
 
 !function $User($label, $id='')
     !return $PrintEventStormingSticky('person', 'User', $label, $id)
 !endfunction
 
+!unquoted procedure ReadModel($label, $id='')
+    $PrintEventStormingSticky('file', 'ReadModel', $label, $id)
+!endprocedure
+
 !function $ReadModel($label, $id='')
     !return $PrintEventStormingSticky('file', 'ReadModel', $label, $id)
 !endfunction
 
+!unquoted procedure Policy($label, $id='')
+    $PrintEventStormingSticky('file', 'Policy', $label, $id)
+!endprocedure
+
 !function $Policy($label, $id='')
     !return $PrintEventStormingSticky('file', 'Policy', $label, $id)
 !endfunction
+
+!unquoted procedure System($label, $id='')
+    $PrintEventStormingSticky('file', 'System', $label, $id)
+!endprocedure
 
 !function $System($label, $id='')
     !return $PrintEventStormingSticky('file', 'System', $label, $id)
