@@ -1,4 +1,6 @@
 # event-storming-puml
+[![Run positive tests](https://github.com/dreamsinbits/event-storming-puml/actions/workflows/positive_tests.yml/badge.svg)](https://github.com/dreamsinbits/event-storming-puml/actions/workflows/positive_tests.yml) [![Run negative tests](https://github.com/dreamsinbits/event-storming-puml/actions/workflows/negative_tests.yml/badge.svg)](https://github.com/dreamsinbits/event-storming-puml/actions/workflows/negative_tests.yml) [![Export PlantUML diagrams of the examples directory](https://github.com/dreamsinbits/event-storming-puml/actions/workflows/export_examples.yml/badge.svg)](https://github.com/dreamsinbits/event-storming-puml/actions/workflows/export_examples.yml)
+
 Library for creating EventStorming diagrams with PlantUML.
 
 This library adheres as closely as possible to the concepts described in the book 
