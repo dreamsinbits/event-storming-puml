@@ -19,10 +19,10 @@ jobs:
         id: get-changed-uml-files
         run: |
           puml_files=''
-          for changed_file in ${{ steps.get-changed-files.outputs.modified }}; do
+          for changed_file in ${{ steps.get-changed-files.outputs.added_modified}}; do
             extension="${changed_file##*.}"
           
-            if [ "${extension}" == "puml" ]; then
+            if [[ "${extension}" == "puml" && "${changed_file}" == examples/* ]]; then
               # add puml file
               puml_files="${puml_files} ${changed_file}"
               echo "Added file: ${changed_file}"
@@ -34,9 +34,8 @@ jobs:
         uses: dreamsinbits/export-plantuml-action@v1
         with:
           args: -v -o out -tsvg ${{ steps.get-changed-uml-files.outputs.puml-files }}
-
       - name: Push Local Changes
-        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_user_name: "PlantUML Diagramm Renderer"
           commit_user_email: "plantuml@trapp-software.de"
