@@ -13,13 +13,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4.2.2
       - name: Render and export diagrams
+        id: render
         uses: dreamsinbits/export-plantuml-action@v1.0.0
         with:
           args: -v -svg ./tests/negative
         continue-on-error: true
       - name: Check if previous step failed, as expected
-        if: failure()
-        run: echo "Negative tests failed as expected"
-          
+        if: steps.render.outcome == 'success'
+        run: exit 1
+
         
         
