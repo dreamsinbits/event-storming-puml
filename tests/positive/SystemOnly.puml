@@ -1,0 +1,7 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+System('A system that does something')
+
+@enduml

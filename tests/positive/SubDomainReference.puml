@@ -1,0 +1,13 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+SubDomain('Some subdomain', SomeSubDomain) {
+    DomainEvent('Something happened', SomethingHappened)
+}
+
+rectangle "Test rectangle" as TestRectangle
+
+TestRectangle ---> SomeSubDomain
+
+@enduml

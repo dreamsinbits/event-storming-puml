@@ -1,0 +1,11 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethingHappened, $Aggregate('An aggregate'))
+
+note "Test note" as TestNote
+
+TestNote ---> SomethingHappened_Aggregate
+
+@enduml

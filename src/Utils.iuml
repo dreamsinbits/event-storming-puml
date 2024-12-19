@@ -1,0 +1,122 @@
+!function $HasId($declaration)
+    !return %strpos($declaration, ' as ') > 0
+!endfunction
+
+!function $GetIdBeginPosition($declaration)
+    ' Do not remove whitespaces around 'as' keyword to avoid matching 'as' in the middle of the word
+    !$position = %strpos($declaration, ' as ')
+
+    !assert $position > 0 : "Could not find 'as' keyword in the declaration: " + $declaration
+
+    !return $position + 4
+!endfunction
+
+!function $GetIdEndPosition($declaration)
+    !$position = %strpos($declaration, '<<')
+
+    !assert $position > 0 : "Could not find opening '<<' in the declaration: " + $declaration
+
+    !return $position - 1
+!endfunction
+
+!function $GetId($declaration)
+    !$idBeginPosition = $GetIdBeginPosition($declaration)
+    !$idEndPosition = $GetIdEndPosition($declaration)
+
+    !return %substr($declaration, $idBeginPosition, $idEndPosition - $idBeginPosition)
+!endfunction
+
+!function $WithId($declaration, $id)
+    !if ($HasId($declaration) == %true())
+        !return $declaration
+    !endif
+
+    !$idBeginPosition = $GetStereotypeBeginPosition($declaration) - 2
+    !$firstPart = %substr($declaration, 0, $idBeginPosition)
+    !$secondPart = %substr($declaration, $idBeginPosition, %strlen($declaration) - $idBeginPosition)
+
+    !return $firstPart + ' as ' + $id + ' ' + $secondPart
+!endfunction
+
+!function $GetStereotypeBeginPosition($declaration)
+    !$position = %strpos($declaration, '<<')
+
+    !assert $position > 0 : "Could not find opening '<<' in the declaration: " + $declaration
+
+    !return $position + 2
+!endfunction
+
+!function $GetStereotypeEndPosition($declaration)
+    !$position = %strpos($declaration, '>>')
+
+    !assert $position > 0 : "Could not find closing '>>' in the declaration: " + $declaration
+
+    !return $position
+!endfunction
+
+!function $GetStereotype($declaration)
+    !$stereotypeBeginPosition = $GetStereotypeBeginPosition($declaration)
+    !$stereotypeEndPosition = $GetStereotypeEndPosition($declaration)
+
+    !return %substr($declaration, $stereotypeBeginPosition, $stereotypeEndPosition - $stereotypeBeginPosition)
+!endfunction
+
+!function $IsStickyStereotype($sticky, $stereotype)
+    !if ($sticky == '')
+        !return %false()
+    !endif
+
+    !return $GetStereotype($sticky) == $stereotype
+!endfunction
+
+!function $IsStickyAggregate($sticky)
+    !return $IsStickyStereotype($sticky, 'Aggregate')
+!endfunction
+
+!function $IsStickyCommand($sticky)
+    !return $IsStickyStereotype($sticky, 'Command')
+!endfunction
+
+!function $IsStickyUser($sticky)
+    !return $IsStickyStereotype($sticky, 'User')
+!endfunction
+
+!function $IsStickyPolicy($sticky)
+    !return $IsStickyStereotype($sticky, 'Policy')
+!endfunction
+
+!function $IsStickySystem($sticky)
+    !return $IsStickyStereotype($sticky, 'System')
+!endfunction
+
+!function $IsStickyReadModel($sticky)
+    !return $IsStickyStereotype($sticky, 'ReadModel')
+!endfunction
+
+!function $GenerateId($eventId, $sticky)
+    !if $IsStickyAggregate($sticky)
+        !return $eventId + '_Aggregate'
+    !endif
+
+    !if $IsStickyCommand($sticky)
+        !return $eventId + '_Command'
+    !endif
+
+    !if $IsStickyUser($sticky)
+        !return $eventId + '_User'
+    !endif
+
+    !if $IsStickyPolicy($sticky)
+        !return $eventId + '_Policy'
+    !endif
+
+    !if $IsStickySystem($sticky)
+        !return $eventId + '_System'
+    !endif
+
+    !if $IsStickyReadModel($sticky)
+        !return $eventId + '_ReadModel'
+    !endif
+
+    !assert %false() : "Could not generate ID for sticky with unknown stereotype: " + $sticky
+!endfunction

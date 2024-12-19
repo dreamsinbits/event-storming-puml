@@ -1,0 +1,41 @@
+@startuml
+!include ../../src/EventStorming.iuml
+
+SubDomain("My Sub-Domain", SD1) {
+    IntegrationEvent('foo bar', 'FooBar', $Aggregate('Registered user'))
+    DomainEvent('Bla bla', BlaBla, $Command(MyCommand))
+
+    FooBar -[hidden] BlaBla_Input
+}
+
+SubDomain("Anther Sub-Domain", SD2) {
+    Process("My Process", MyProcess) {
+        !$user = 'Bla'
+        DomainEvent("Foo 2", Foo2, $User(Qus), $Command(Bas2), $Aggregate($user))
+        note "This is a note" as foo
+        foo . Foo2_Aggregate
+
+        DomainEvent("Foo 21", Foo21, $User(Qus1), $Command(Bas21), $Aggregate($user))
+        DomainEvent("Event with Policy", EventWithPolicy, $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
+        DomainEvent("Event with Policy and User", EventWithPolicyAndUser, $ReadModel(Foo), $User(Hans), $Policy(MyPolicy), $Command(MyCommand), $Aggregate(MyAggregate))
+
+        Foo2 -[hidden] Foo21_Input
+    }
+
+    Process("Another Process", AnotherProcess) {
+        DomainEvent("Event with Read Model", EventWithReadModel, $User(Hans), $ReadModel(Data), $Command(MyCommand), $Aggregate(MyAggregate))
+        DomainEvent("Event with Read Model and without Command", EventWithReadModelWithoutCommand, $ReadModel(Data), $Aggregate(MyAggregate))
+
+        Blocker("Annoying blocker", "Blocker")
+        Opportunity("Opportunity for improvement", "Opportunity")
+
+        Blocker -- EventWithReadModel
+    }
+
+    Process("Yet Another Process", YetAnotherProcess) {
+        DomainEvent("Event with System", EventWithSystem, $User(Hans), $System(Data), $Command(MyCommand), $Aggregate(MyAggregate))
+        DomainEvent("Event with System", EventWithSystemWithoutCommand, $System(Data), $Aggregate(MyAggregate))
+    }
+}
+
+@enduml
