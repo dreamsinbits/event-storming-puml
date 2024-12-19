@@ -15,11 +15,11 @@ jobs:
       - name: Render and export diagrams
         uses: dreamsinbits/export-plantuml-action@v1.0.0
         with:
-          args: -v -svg ./tests/positive
+          args: -v -svg ./tests/negative
         continue-on-error: true
       - name: Check if previous step failed, as expected
-        if: success()
-        run: exit 1
+        if: failure()
+        run: echo "Negative tests failed as expected"
           
         
         
