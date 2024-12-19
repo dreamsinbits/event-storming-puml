@@ -1,0 +1,7 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+ReadModel('The data')
+
+@enduml

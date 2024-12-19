@@ -1,0 +1,11 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethingHappened, $Command('Do something'), $System('A system that does something'))
+
+note "Test note" as TestNote
+
+TestNote ---> SomethingHappened_System
+
+@enduml

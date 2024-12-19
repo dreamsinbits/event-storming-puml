@@ -1,0 +1,345 @@
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/feat/initial/src/Theme.iuml
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/feat/initial/src/Utils.iuml
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/feat/initial/src/Stickies.iuml
+
+!unquoted procedure SubDomain($label, $id = '')
+    !if $id == ''
+        storage "$label" <<SubDomain>> #LightBlue
+    !else
+        storage "$label" <<SubDomain>> as $id #LightBlue
+    !endif
+!endprocedure
+
+!unquoted procedure Process($label, $id = '')
+    !if $id == ''
+        rectangle "$label" <<Process>>
+    !else
+        rectangle "$label" <<Process>> as $id
+    !endif
+!endprocedure
+
+!function $GetAggregate($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !if ($IsStickyAggregate($sticky1))
+       !return $sticky1
+    !endif
+
+    !if ($IsStickyAggregate($sticky2))
+       !return $sticky2
+    !endif
+
+    !if ($IsStickyAggregate($sticky3))
+       !return $sticky3
+    !endif
+
+    !if ($IsStickyAggregate($sticky4))
+       !return $sticky4
+    !endif
+
+    !if ($IsStickyAggregate($sticky5))
+       !return $sticky5
+    !endif
+
+    !if ($IsStickyAggregate($sticky6))
+       !return $sticky6
+    !endif
+
+    !return ''
+!endprocedure
+
+!function $GetCommand($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !if ($IsStickyCommand($sticky1))
+       !return $sticky1
+    !endif
+
+    !if ($IsStickyCommand($sticky2))
+       !return $sticky2
+    !endif
+
+    !if ($IsStickyCommand($sticky3))
+       !return $sticky3
+    !endif
+
+    !if ($IsStickyCommand($sticky4))
+       !return $sticky4
+    !endif
+
+    !if ($IsStickyCommand($sticky5))
+       !return $sticky5
+    !endif
+
+    !if ($IsStickyCommand($sticky6))
+       !return $sticky6
+    !endif
+
+    !return ''
+!endprocedure
+
+!function $GetUser($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !if ($IsStickyUser($sticky1))
+       !return $sticky1
+    !endif
+
+    !if ($IsStickyUser($sticky2))
+       !return $sticky2
+    !endif
+
+    !if ($IsStickyUser($sticky3))
+       !return $sticky3
+    !endif
+
+    !if ($IsStickyUser($sticky4))
+       !return $sticky4
+    !endif
+
+    !if ($IsStickyUser($sticky5))
+       !return $sticky5
+    !endif
+
+    !if ($IsStickyUser($sticky6))
+       !return $sticky6
+    !endif
+
+    !return ''
+!endprocedure
+
+!function $GetPolicy($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !if ($IsStickyPolicy($sticky1))
+       !return $sticky1
+    !endif
+
+    !if ($IsStickyPolicy($sticky2))
+       !return $sticky2
+    !endif
+
+    !if ($IsStickyPolicy($sticky3))
+       !return $sticky3
+    !endif
+
+    !if ($IsStickyPolicy($sticky4))
+       !return $sticky4
+    !endif
+
+    !if ($IsStickyPolicy($sticky5))
+       !return $sticky5
+    !endif
+
+    !if ($IsStickyPolicy($sticky6))
+       !return $sticky6
+    !endif
+
+    !return ''
+!endprocedure
+
+!function $GetSystem($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !if ($IsStickySystem($sticky1))
+       !return $sticky1
+    !endif
+
+    !if ($IsStickySystem($sticky2))
+       !return $sticky2
+    !endif
+
+    !if ($IsStickySystem($sticky3))
+       !return $sticky3
+    !endif
+
+    !if ($IsStickySystem($sticky4))
+       !return $sticky4
+    !endif
+
+    !if ($IsStickySystem($sticky5))
+       !return $sticky5
+    !endif
+
+    !if ($IsStickySystem($sticky6))
+       !return $sticky6
+    !endif
+
+    !return ''
+!endprocedure
+
+!function $GetReadModel($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !if ($IsStickyReadModel($sticky1))
+       !return $sticky1
+    !endif
+
+    !if ($IsStickyReadModel($sticky2))
+       !return $sticky2
+    !endif
+
+    !if ($IsStickyReadModel($sticky3))
+       !return $sticky3
+    !endif
+
+    !if ($IsStickyReadModel($sticky4))
+       !return $sticky4
+    !endif
+
+    !if ($IsStickyReadModel($sticky5))
+       !return $sticky5
+    !endif
+
+    !if ($IsStickyReadModel($sticky6))
+       !return $sticky6
+    !endif
+
+    !return ''
+!endprocedure
+
+!unquoted procedure PrintAggregate($aggregate, $eventId)
+    !$__aggregateId__ = $GenerateId($eventId, $aggregate)
+    !$aggregate = $WithId($aggregate, $__aggregateId__)
+
+    $aggregate
+
+    'ID can be another than x_Aggregate when it was set explicitly
+    !$__aggregateId__ = $GetId($aggregate)
+    $__aggregateId__ -- $eventId
+!endprocedure
+
+!unquoted procedure PrintSystem($system, $eventId)
+    !$__systemId__ = $GenerateId($eventId, $system)
+    !$system = $WithId($system, $__systemId__)
+    $system
+
+    'ID can be another than x_System when it was set explicitly
+    !$__systemId__ = $GetId($system)
+    $__systemId__ - $eventId
+!endprocedure
+
+!unquoted procedure PrintReadModel($readModel, $commandId, $eventId)
+    !$__readModelId__ = $GenerateId($eventId, $readModel)
+    !$readModel = $WithId($readModel, $__readModelId__)
+    $readModel
+
+    'ID can be another than x_ReadModel when it was set explicitly
+    !$__readModelId__ = $GetId($readModel)
+    $eventId -[hidden]- $__readModelId__
+
+    !if ($commandId != '')
+        $commandId -[hidden]- $__readModelId__
+    !endif
+!endprocedure
+
+!unquoted procedure PrintCommand($command, $systemId, $policy, $user, $inputId, $eventId)
+    !$__commandId__ = $GenerateId($eventId, $command)
+    !$command = $WithId($command, $__commandId__)
+    $command
+
+    'ID can be another than x_Command when it was set explicitly
+    !$__commandId__ = $GetId($command)
+
+    !if ($systemId != '')
+        $__commandId__ - $systemId
+    !else
+        $__commandId__ - $eventId
+    !endif
+
+    !if ($policy != '')
+        !$__policyId__ = $GenerateId($eventId, $policy)
+        !$policy = $WithId($policy, $__policyId__)
+        $policy
+
+        'ID can be another than x_Policy when it was set explicitly
+        !$__policyId__ = $GetId($policy)
+        $__policyId__ - $__commandId__
+    !endif
+
+    !if ($user != '')
+        !$__userId__ = $GenerateId($eventId, $user)
+        !$user = $WithId($user, $__userId__)
+
+        $user
+
+        'ID can be another than x_User when it was set explicitly
+        !$__userId__ = $GetId($user)
+        $__userId__ - $__commandId__
+        $inputId -[hidden] $__userId__
+    !endif
+
+    !if ($user != '' && $policy != '')
+        $__userId__ -[hidden] $__policyId__
+        $__policyId__ -[hidden] $__userId__
+    !endif
+!endprocedure
+
+!unquoted procedure $PrintEventStickies($event, $sticky1='', $sticky2='', $sticky3='', $sticky4='', $sticky5='', $sticky6='')
+    !assert $GetStereotype($event) == 'DomainEvent' || $GetStereotype($event) == 'IntegrationEvent'
+
+    'All variable names with double underscores to omit name conflicts
+    !$__eventId__ = $GetId($event)
+    !$__firstStickyId__ = $__eventId__
+
+    ' There are no arrays in PlantUML, so we have to check each sticky separately
+    !$__aggregate__ = $GetAggregate($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !$__command__ = $GetCommand($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !$__user__ = $GetUser($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !$__policy__ = $GetPolicy($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !$__system__ = $GetSystem($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+    !$__readModel__ = $GetReadModel($sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+
+    !$__inputId__ = $__eventId__ + '_Input'
+    !$__input__ = 'queue " " as ' + $__inputId__ + ' #Black;line:Black'
+
+    $__input__
+    $event
+
+    !if ($__aggregate__ != '')
+        PrintAggregate($__aggregate__, $__eventId__)
+    !endif
+
+    'A function cannot print something, so the following code cannot be extracted to functions.
+    !$__systemId__ = ''
+
+    !if ($__system__ != '')
+        PrintSystem($__system__, $__eventId__)
+
+        !$__systemId__ = $GenerateId($__eventId__, $__system__)
+        !$__firstStickyId__ = $__systemId__
+    !endif
+
+    !$__commandId__ = ''
+
+    !if ($__command__ != '')
+        PrintCommand($__command__, $__systemId__, $__policy__, $__user__, $__inputId__, $__eventId__)
+
+        !$__commandId__ = $GenerateId($__eventId__, $__command__)
+        !$__firstStickyId__ = $__commandId__
+
+        !$__userId__ = ''
+
+        !if ($__user__ != '')
+            !$__userId__ = $GenerateId($__eventId__, $__user__)
+            !$__firstStickyId__ = $__userId__
+        !endif
+
+        !$__policyId__ = ''
+
+        !if ($__policy__ != '')
+            !$__policyId__ = $GenerateId($__eventId__, $__policy__)
+            !$__firstStickyId__ = $__policyId__
+        !endif
+
+        !if ($__user__ != '' && $__policy__ != '')
+            $__policyId__ -[hidden] $__userId__
+            $__userId__ -[hidden] $__policyId__
+        !endif
+    !else
+        !assert $__command__ == '' && $__user__ == '' : "User stickies can only be set with a Command."
+        !assert $__command__ == '' && $__policy__ == '' : "Policy stickies can only be set with a Command."
+    !endif
+
+    !if ($__readModel__ != '')
+        PrintReadModel($__readModel__, $__commandId__, $__eventId__)
+    !endif
+
+    $__inputId__ - $__firstStickyId__
+!endprocedure
+
+!unquoted procedure DomainEvent($label, $id, $sticky1 = '', $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
+    $PrintEventStickies($DomainEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+!endfunction
+
+!unquoted procedure IntegrationEvent($label, $id, $sticky1 = '', $sticky2 = '', $sticky3 = '', $sticky4 = '', $sticky5 = '', $sticky6 = '')
+    $PrintEventStickies($IntegrationEvent($label, $id), $sticky1, $sticky2, $sticky3, $sticky4, $sticky5, $sticky6)
+!endfunction

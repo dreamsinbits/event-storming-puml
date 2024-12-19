@@ -1,0 +1,58 @@
+show stereotype
+skinparam defaultTextAlignment center
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
+skinparam nodesep 12
+' Unfortunately it's not possible to set a smaller ranksep than 1
+skinparam ranksep 1
+skinparam linetype ortho
+
+skinparam file<<DomainEvent>> {
+    BackgroundColor #ff8b00
+    Opacity 1
+}
+
+skinparam file<<IntegrationEvent>> {
+    BackgroundColor Orange
+    Opacity 1
+}
+
+skinparam file<<Aggregate>> {
+    BackgroundColor #ffee88
+    Opacity 1
+}
+
+skinparam file<<Command>> {
+    BackgroundColor #25abfd
+    Opacity 1
+}
+
+skinparam person<<User>> {
+    BackgroundColor #fdf72d
+    Opacity 1
+}
+
+skinparam file<<ReadModel>> {
+    BackgroundColor #b3e300
+    Opacity 1
+}
+
+skinparam file<<System>> {
+    BackgroundColor #fcd5ed
+    Opacity 1
+}
+
+skinparam file<<Policy>> {
+    BackgroundColor #e9beff
+    Opacity 1
+}
+
+skinparam file<<Blocker>> {
+    BackgroundColor #e300b7
+    Opacity 1
+}
+
+skinparam file<<Opportunity>> {
+    BackgroundColor GreenYellow
+    Opacity 1
+}

@@ -1,0 +1,15 @@
+@startuml
+
+!include ../src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethingHappened, $Command('Do something'), $Aggregate('An aggregate', AnAggregate))
+
+note "You can reference stickies by EventId_StickyType e.g. SomethingHappened_Command" as CommandNote #Tomato
+note "To reference the event no underscore is needed." as EventNote
+note "It's possible to set custom IDs for every sticky." as AggregateNote
+
+CommandNote -- SomethingHappened_Command
+SomethingHappened -- EventNote
+AnAggregate- AggregateNote
+
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+
+!include ../../src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethingHappened, $Command('Do something'), $User('User'))
+
+@enduml
