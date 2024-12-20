@@ -180,7 +180,7 @@ SubDomain('My subdomain', MySubdomain) {
   Refer to [EventStormingShoppingElephant.puml](examples/EventStormingShoppingElephant.puml) and 
   [ShoppingElephantShopping.puml](examples/ShoppingElephantShopping.puml) for an example.
 
-## Contribute
+## Contributing
 I appreciate every interest in contributing.
 For improvements feel free to create pull requests.
 Please use the [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) scheme for your commit messages.
