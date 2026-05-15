@@ -1,0 +1,10 @@
+@startuml
+
+!includeurl https://raw.githubusercontent.com/dreamsinbits/event-storming-puml/refs/heads/main/src/EventStorming.iuml
+
+DomainEvent('Something happened', SomethinHappened)
+DomainEvent('Something differen happened in parallel', SomethinHappenedParallel)
+
+SomethingHappened_Input -[hidden]--- SomethingHappenedParallel_Input
+
+@enduml
